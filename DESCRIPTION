@@ -1,0 +1,35 @@
+Package: seqHMM
+Title: Hidden Markov Models for Life Sequences and Other Multivariate,
+        Multichannel Categorical Time Series
+Version: 1.0.2-1
+Date: 2015-12-18
+Author: Jouni Helske, Satu Helske
+Maintainer: Jouni Helske <jouni.helske@jyu.fi>
+Description: Designed for fitting hidden (latent)
+    Markov models and mixture hidden Markov models for social
+    sequence data and other categorical time series. Also some more restricted
+    versions of these type of models are available: Markov models, mixture
+    Markov models, and latent class models. The package supports models for one or
+    multiple subjects with one or multiple parallel sequences (channels). External
+    covariates can be added to explain cluster membership in mixture models. The
+    package provides functions for evaluating and comparing models, as well as
+    functions for easy plotting of multichannel sequence data and hidden Markov
+    models. Models are estimated using maximum likelihood via the EM algorithm and/or
+    direct numerical maximization with analytical gradients.
+    All main algorithms are written in C++ with support for parallel computation.
+LazyData: true
+LinkingTo: Rcpp, RcppArmadillo
+Depends: R (>= 3.0.0)
+Imports: gridBase, igraph, Matrix, nloptr, numDeriv, Rcpp (>= 0.11.3),
+        TraMineR (>= 1.8-8), graphics, grDevices, grid, methods, stats,
+        utils
+Suggests: MASS, nnet, knitr
+License: GPL (>= 2)
+Encoding: UTF-8
+BugReports: https://github.com/helske/seqHMM/issues
+VignetteBuilder: knitr
+RoxygenNote: 5.0.1
+NeedsCompilation: yes
+Packaged: 2015-12-18 13:14:56 UTC; jovetale
+Repository: CRAN
+Date/Publication: 2015-12-19 16:15:27
