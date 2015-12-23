@@ -529,15 +529,15 @@ fit_model <- function(model, em_step = TRUE, global_step = FALSE, local_step = F
       opt_restart <- numeric(restart.con$times + 1)
       opt_restart[1] <- resEM$logLik
 
-      if (!mhmm || resEM$error == 0) {
+      if (resEM$error == 0) {
         random_emiss <- resEM$emissionArray
-        random_emiss[(random_emiss < 1e-4) & (emissionArray >= 1e-4)] <- 1e-4
+        random_emiss[(random_emiss < 1e-4) & (emissionArray > 0)] <- 1e-4
         for (j in 1:model$n_channels) {
           random_emiss[,1:model$n_symbols[j],j] <-
             random_emiss[,1:model$n_symbols[j],j] / rowSums(random_emiss[,1:model$n_symbols[j],j])
         }
         random_trans <- resEM$transitionMatrix
-        random_trans[(random_trans < 1e-4) & (model$transition_probs >= 1e-4)] <- 1e-4
+        random_trans[(random_trans < 1e-4) & (model$transition_probs > 0)] <- 1e-4
         random_trans <- random_trans / rowSums(random_trans)
       } else {
         random_emiss <- emissionArray
@@ -558,10 +558,12 @@ fit_model <- function(model, em_step = TRUE, global_step = FALSE, local_step = F
       for (i in 1:restart.con$times) {
         if (restart.con$transition) {
           random_trans[nz_trans] <- abs(base_trans + rnorm(np_trans, sd = restart.con$sd))
+          random_trans[(random_trans < 1e-4) & (model$transition_probs > 0)] <- 1e-4
           random_trans <- random_trans / rowSums(random_trans)
         }
         if (restart.con$emission) {
           random_emiss[nz_emiss] <- abs(base_emiss + rnorm(np_emiss, sd = restart.con$sd))
+          random_emiss[(random_emiss < 1e-4) & (emissionArray > 0)] <- 1e-4
           for (j in 1:model$n_channels) {
             random_emiss[,1:model$n_symbols[j],j] <-
               random_emiss[,1:model$n_symbols[j],j] / rowSums(random_emiss[,1:model$n_symbols[j],j])
@@ -587,9 +589,9 @@ fit_model <- function(model, em_step = TRUE, global_step = FALSE, local_step = F
           }
         }
 
-        opt_restart[i + 1] <- resEMi$logLik
 
         if (resEMi$error != 0) {
+          opt_restart[i + 1] <- -Inf
           err_msg <- switch(resEMi$error,
             "Scaling factors contain non-finite values.",
             "Backward probabilities contain non-finite values.",
@@ -599,6 +601,7 @@ fit_model <- function(model, em_step = TRUE, global_step = FALSE, local_step = F
             "Non-finite log-likelihood")
           warning(paste("EM algorithm failed:", err_msg))
         } else {
+          opt_restart[i + 1] <- resEMi$logLik
           if (is.finite(resEMi$logLik) && resEMi$logLik > resEM$logLik) {
             resEM <- resEMi
           }
