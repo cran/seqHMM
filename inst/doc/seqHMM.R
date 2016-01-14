@@ -9,18 +9,17 @@ library("seqHMM")
 
 data("biofam", package = "TraMineR")
 biofam_seq <- seqdef(
-  biofam[, 10:25],
+  biofam[, 10:25], start = 15,
   labels = c("parent", "left", "married", "left+marr", "child",
-             "left+child", "left+marr+ch", "divorced"),
-  start = 15)
+             "left+child", "left+marr+ch", "divorced"))
 
 data("biofam3c")
 marr_seq <- seqdef(biofam3c$married, start = 15,
-                   alphabet = c("single", "married", "divorced"))
+  alphabet = c("single", "married", "divorced"))
 child_seq <- seqdef(biofam3c$children, start = 15,
-                    alphabet = c("childless", "children"))
+  alphabet = c("childless", "children"))
 left_seq <- seqdef(biofam3c$left, start = 15,
-                   alphabet = c("with parents", "left home"))
+  alphabet = c("with parents", "left home"))
 
 attr(marr_seq, "cpal") <- c("violetred2", "darkgoldenrod2", "darkmagenta")
 attr(child_seq, "cpal") <- c("darkseagreen1", "coral3")
@@ -67,6 +66,7 @@ mc_trans <- matrix(
     0,       0,    0,    0,    1),
   nrow = 5, ncol = 5, byrow = TRUE)
 
+
 mc_emiss_marr <- matrix(
   c(0.90, 0.05, 0.05,
     0.90, 0.05, 0.05,
@@ -102,42 +102,42 @@ data("hmm_biofam")
 # mc_fit <- fit_model(mc_initmod, em_step = FALSE, local_step = TRUE,
 #   threads = 4)
 
-
-## ----plottingHMM, out.width='\\linewidth', fig.height=6, dev.args=list(pointsize=10), echo=FALSE, fig.cap="Illustrating a hidden Markov model as a directed graph. Pies represent five hidden states, with slices showing emission probabilities of combinations of observed states. States with emission probability less than 0.05 are combined into one slice. Edges show the transtion probabilities. Initial probabilities of hidden states are given below the pies.", fig.align='center', fig.keep='last', cache = FALSE----
+## ----plottingHMM, out.width='\\linewidth', fig.height=3.5, dev.args=list(pointsize=10), echo=FALSE, fig.cap="Illustrating a hidden Markov model as a directed graph. Pies represent five hidden states, with slices showing emission probabilities of combinations of observed states. States with emission probability less than 0.05 are combined into one slice. Edges show the transtion probabilities. Initial probabilities of hidden states are given below the pies.", fig.align='center', fig.keep='last', cache = FALSE----
 plot(hmm_biofam, vertex.size = 50, vertex.label.dist = 1.5,
-  edge.curved = c(0, 0.8, -0.8, 0.8, 0, 0.8, 0),
+  edge.curved = c(0, 0.6, -0.8, 0.6, 0, 0.6, 0),
   legend.prop = 0.3, combined.slice.label = "States with prob. < 0.05")
 
-## ----graphicalillustrations5, out.width='\\linewidth',  fig.height=4, dev.args=list(pointsize=10), echo=FALSE, fig.cap="Another version of the hidden Markov model of Figure 4 with a different layout and modified labels, legends, and colors. All observed states are shown.", fig.align='center', fig.keep='last', cache = FALSE----
-plot(hmm_biofam, layout = matrix(c(1, 3, 3, 5,  3,
-                                     0, 0, 1, 0, -1), ncol = 2),
-  xlim = c(0.5, 5.5), ylim = c(-1.5,1.5), rescale = FALSE,
-  vertex.size=50, edge.curved = FALSE, edge.width = 1, edge.arrow.size = 1,
-  vertex.label.pos = c(pi, pi/2, -pi/2, 0, pi/2),
-  withlegend = "top", legend.prop = 0.3, ncol.legend = 2,
-  label.signif = 1, combine.slices = 0, cpal = colorpalette[[30]][c(14:5)])
+## ----graphicalillustrations5, out.width='\\linewidth', fig.height=3.5, dev.args=list(pointsize=10), echo=FALSE, fig.cap="Another version of the hidden Markov model of Figure 4 with a different layout and modified labels, legends, and colors. All observed states are shown.", fig.align='center', fig.keep='last', cache = FALSE----
+plot(hmm_biofam, layout = matrix(c(1, 2, 2, 3,  1,
+                                   0, 0.5, -0.5, 0, -1), ncol = 2),
+  xlim = c(0.5, 3.5), ylim = c(-1.5, 1), rescale = FALSE,
+  vertex.label.pos = c("left", "top", "bottom", "right", "left"),
+  vertex.size = 50, edge.curved = FALSE, edge.width = 1, 
+  edge.arrow.size = 1, withlegend = "left", legend.prop = 0.4, 
+  label.signif = 1, combine.slices = 0, 
+  cpal = colorpalette[[30]][c(14:5)])
 
-## ----ssplotHMM, fig.width=5.5, fig.height=5.5, dev.args=list(pointsize=10), fig.cap="Using the \\code{ssplot} function for a \\code{hmm} object makes it easy to plot observed sequences together with the most probable paths of hidden states given the model.", fig.align='center', fig.keep='last', cache = FALSE, echo = FALSE----
+## ----ssplotHMM, fig.width=5.5, fig.height=5.5, dev.args=list(pointsize=10), fig.cap="Using the \\code{ssplot} function for an \\code{hmm} object makes it easy to plot the observed sequences together with the most probable paths of hidden states given the model.", fig.align='center', fig.keep='last', cache = FALSE, echo = FALSE----
 ssplot(hmm_biofam, plots = "both", type = "I", sortv = "mds.hidden",
-  xtlab = 15:30, xlab = "Age", title = "Observed and hidden state sequences")
+  xtlab = 15:30, xlab = "Age", 
+  title = "Observed and hidden state sequences")
 
 ## ----code_settingdata, ref.label = 'settingdata', message=FALSE, warning = TRUE, echo = TRUE----
 library("seqHMM")
 
 data("biofam", package = "TraMineR")
 biofam_seq <- seqdef(
-  biofam[, 10:25],
+  biofam[, 10:25], start = 15,
   labels = c("parent", "left", "married", "left+marr", "child",
-             "left+child", "left+marr+ch", "divorced"),
-  start = 15)
+             "left+child", "left+marr+ch", "divorced"))
 
 data("biofam3c")
 marr_seq <- seqdef(biofam3c$married, start = 15,
-                   alphabet = c("single", "married", "divorced"))
+  alphabet = c("single", "married", "divorced"))
 child_seq <- seqdef(biofam3c$children, start = 15,
-                    alphabet = c("childless", "children"))
+  alphabet = c("childless", "children"))
 left_seq <- seqdef(biofam3c$left, start = 15,
-                   alphabet = c("with parents", "left home"))
+  alphabet = c("with parents", "left home"))
 
 attr(marr_seq, "cpal") <- c("violetred2", "darkgoldenrod2", "darkmagenta")
 attr(child_seq, "cpal") <- c("darkseagreen1", "coral3")
@@ -177,7 +177,8 @@ attr(left_seq, "cpal") <- c("lightblue", "red3")
 sc_data <- mc_to_sc_data(list(marr_seq, child_seq, left_seq))
 
 ssplot(sc_data, type = "d", ylab = "Proportion", yaxis = TRUE,
-  xtlab = 15:30, xlab = "Age", title = "Combined states", legend.prop = 0.4)
+  xtlab = 15:30, xlab = "Age", title = "Combined states", 
+  legend.prop = 0.4)
 
 ## ----code_sc_initialvalues, cache=FALSE-----------------------------
 sc_init <- c(0.9, 0.06, 0.02, 0.01, 0.01)
@@ -205,10 +206,11 @@ sc_initmod <- build_hmm(observations = biofam_seq, initial_probs = sc_init,
 ## ----code_sc_fitHMM, cache=FALSE------------------------------------
 sc_fit <- fit_model(sc_initmod)
 
-## ----code_sc_results, cache=FALSE-----------------------------------
+## ----code_sc_results1, cache=FALSE----------------------------------
 sc_fit$logLik
+
+## ----code_sc_results2, cache=FALSE----------------------------------
 sc_fit$model
-BIC(sc_fit$model)
 
 ## ----code_mcHMM2, ref.label = 'code_mcHMM', echo = TRUE, message=TRUE, warnings=TRUE, eval = TRUE, cache = FALSE----
 mc_init <- c(0.9, 0.05, 0.02, 0.02, 0.01)
@@ -220,6 +222,7 @@ mc_trans <- matrix(
     0,       0,    0, 0.90, 0.10,
     0,       0,    0,    0,    1),
   nrow = 5, ncol = 5, byrow = TRUE)
+
 
 mc_emiss_marr <- matrix(
   c(0.90, 0.05, 0.05,
@@ -256,10 +259,9 @@ data("hmm_biofam")
 # mc_fit <- fit_model(mc_initmod, em_step = FALSE, local_step = TRUE,
 #   threads = 4)
 
-
 ## ----code_mcHMM_BIC, cache=FALSE, echo = TRUE, message=FALSE, eval = TRUE----
 # Vignette: already loaded hmm_biofam
-#hmm_biofam <- mc_fit$model
+# hmm_biofam <- mc_fit$model
 BIC(hmm_biofam)
 
 ## ----code_MHMM, cache=FALSE, echo = TRUE, eval = TRUE, warning=TRUE----
@@ -296,6 +298,7 @@ mc_emiss_left2 <- matrix(
     0.5, 0.5),
   nrow = 4, ncol = 2, byrow = TRUE)
 
+
 init_mhmm <- build_mhmm(
   observations = list(marr_seq, child_seq, left_seq),
   initial_probs = list(mc_init, mc_init2),
@@ -321,25 +324,28 @@ plot(hmm_biofam)
 
 ## ----code_plottingHMM, ref.label='plottingHMM', echo=TRUE, eval = FALSE----
 #  plot(hmm_biofam, vertex.size = 50, vertex.label.dist = 1.5,
-#    edge.curved = c(0, 0.8, -0.8, 0.8, 0, 0.8, 0),
+#    edge.curved = c(0, 0.6, -0.8, 0.6, 0, 0.6, 0),
 #    legend.prop = 0.3, combined.slice.label = "States with prob. < 0.05")
 
 ## ----code_graphicalillustrations5, ref.label = 'graphicalillustrations5', echo=TRUE, eval = FALSE----
-#  plot(hmm_biofam, layout = matrix(c(1, 3, 3, 5,  3,
-#                                       0, 0, 1, 0, -1), ncol = 2),
-#    xlim = c(0.5, 5.5), ylim = c(-1.5,1.5), rescale = FALSE,
-#    vertex.size=50, edge.curved = FALSE, edge.width = 1, edge.arrow.size = 1,
-#    vertex.label.pos = c(pi, pi/2, -pi/2, 0, pi/2),
-#    withlegend = "top", legend.prop = 0.3, ncol.legend = 2,
-#    label.signif = 1, combine.slices = 0, cpal = colorpalette[[30]][c(14:5)])
+#  plot(hmm_biofam, layout = matrix(c(1, 2, 2, 3,  1,
+#                                     0, 0.5, -0.5, 0, -1), ncol = 2),
+#    xlim = c(0.5, 3.5), ylim = c(-1.5, 1), rescale = FALSE,
+#    vertex.label.pos = c("left", "top", "bottom", "right", "left"),
+#    vertex.size = 50, edge.curved = FALSE, edge.width = 1,
+#    edge.arrow.size = 1, withlegend = "left", legend.prop = 0.4,
+#    label.signif = 1, combine.slices = 0,
+#    cpal = colorpalette[[30]][c(14:5)])
 
 ## ----code_ssplotHMM, ref.label = 'ssplotHMM', eval = FALSE, echo = TRUE----
 #  ssplot(hmm_biofam, plots = "both", type = "I", sortv = "mds.hidden",
-#    xtlab = 15:30, xlab = "Age", title = "Observed and hidden state sequences")
+#    xtlab = 15:30, xlab = "Age",
+#    title = "Observed and hidden state sequences")
 
-## ----code_plottingMHMMbasic, fig.width=6.5, fig.height=7, dev.args=list(pointsize=10), echo=TRUE, fig.align='center', fig.keep='last', cache = FALSE, eval = TRUE, fig.cap="Plotting submodels of a MHMM with the \\code{plot} method."----
-plot(mhmm, interactive = FALSE, nrow = 2, legend.prop = 0.35,
-  cex.legend = 1.3, edge.label.cex = 1.3, vertex.label.cex = 1.3)
+## ----code_plottingMHMMbasic, fig.width=6.5, fig.height=8, dev.args=list(pointsize=10), echo=TRUE, fig.align='center', fig.keep='last', cache = FALSE, eval = TRUE, fig.cap="Plotting submodels of an MHMM with the \\code{plot} method."----
+plot(mhmm, interactive = FALSE, nrow = 2, legend.prop = 0.45,
+  vertex.size = 50, vertex.label.cex = 1.3, cex.legend = 1.3, 
+  edge.curved = 0.65, edge.label.cex = 1.3, edge.arrow.size = 0.8)
 
 ## ----code_ssplotMHMM, eval = FALSE, echo = TRUE---------------------
 #  mssplot(mhmm, ask = TRUE)
