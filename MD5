@@ -1,9 +1,9 @@
-a0cc62970311ed6a54cabbe4c515300d *DESCRIPTION
+66354299b65dd5297fe713c1911c1922 *DESCRIPTION
 0a5e48e774469979d8eecbdd8bfa0db1 *NAMESPACE
-56624b7817f3ebbd1fbe6896cbc802a7 *NEWS
+7773a2ecbba522bb895904da6841d781 *NEWS
 71c68632686b2d168a57741e825d1a16 *R/HMMplot.R
 b2d1b46f845b84de93414ca3bbcd5bec *R/RcppExports.R
-08736d3b8f2bf54729dad9ebc2aaee65 *R/SSPlotter.R
+0705d82b45e351a874aebfcec516ec88 *R/SSPlotter.R
 165a02f81c29866de258f8e32e010ec9 *R/biofam3c.R
 3a2a8b7de23ba1175a6eb337aef5bdaa *R/build_hmm.R
 561d88246825e9b67d9640909ef55062 *R/build_lcm.R
@@ -14,7 +14,7 @@ fe2c1ca1f08f213fc8c7271a7233eee8 *R/build_mmm.R
 c501731291a9aa14d341e60442cbe0fd *R/combine_models.R
 a4fbc88a22376f6531f49f3b5cddd106 *R/fit_model.R
 3e4f25bb9c656f1ea2a8446ba7806ad0 *R/forwardBackward.R
-9fe28aeecba402d1898228c458c4a761 *R/gridplot.R
+22ecc56b5f2ff73580f6de2a801902ab *R/gridplot.R
 8d800a6c42660ef5718e86a9ff168b04 *R/help_data.R
 84b1dc0d781bbe97b90734b26670bd07 *R/hidden_paths.R
 e9a202767bc83aebed76a38e87798dfe *R/hmm_biofam.R
@@ -29,7 +29,7 @@ f6d6e1ddb72f66ac43fd7a1d3c119a43 *R/logLik.mhmm.R
 360c359f97d4f3bb0bf02e02676eccb1 *R/mc_to_sc_data.R
 89f1419e0ef37d9650945d2199b16e0d *R/mhmm_biofam.R
 725447d5fdbe0aac8f5144f053bd192b *R/mhmm_mvad.R
-2a57cdca3887e98b5c3dba0d2ba2d0c8 *R/mssplot.R
+9142e67cfc77de8e9ebe57c951d9f72b *R/mssplot.R
 29249393037930ae8a9b09cd62bffa1b *R/plot.hmm.R
 fca2de08ac8bccd48e863d612c64a9b6 *R/plot.igraph2.R
 b68998a83b77f50fbd5685820925a659 *R/plot.mhmm.R
@@ -61,7 +61,7 @@ dd24318a6a45ef2a41dde54cd2d7a5c8 *data/mhmm_biofam.rda
 4c74302661259fe1a352329b9ec2a042 *data/mhmm_mvad.rda
 c6a7c0d5c12946e5a033a6638d0d8d3d *inst/doc/seqHMM.R
 2e8831c5890a526b0fcf8184cf6fd998 *inst/doc/seqHMM.Rnw
-09d31fb51b986c907f155596df213592 *inst/doc/seqHMM.pdf
+c91c2c6060ee50c826298fc728294635 *inst/doc/seqHMM.pdf
 46f75d7481bc6baa52cf536690b4d2ea *man/TraMineR_imports.Rd
 904eb3c4110f850fad97b82d5a1654d3 *man/biofam3c.Rd
 230a6405938d861227183001b3abb6d8 *man/build_hmm.Rd
