@@ -7,10 +7,10 @@ Paths for Mixture Hidden Markov Models}
 \usage{
 mssplot(x, ask = FALSE, which.plots = NULL, hidden.paths = NULL,
   plots = "obs", type = "d", tlim = 0, sortv = NULL, sort.channel = 1,
-  dist.method = "OM", with.missing = FALSE, title = NA, title.n = TRUE,
-  cex.title = 1, title.pos = 1, withlegend = "auto",
-  ncol.legend = "auto", with.missing.legend = "auto", legend.prop = 0.3,
-  cex.legend = 1, hidden.states.colors = "auto",
+  dist.method = "OM", with.missing = FALSE, missing.color = NULL,
+  title = NA, title.n = TRUE, cex.title = 1, title.pos = 1,
+  withlegend = "auto", ncol.legend = "auto", with.missing.legend = "auto",
+  legend.prop = 0.3, cex.legend = 1, hidden.states.colors = "auto",
   hidden.states.labels = "auto", xaxis = TRUE, xlab = NA, xtlab = NULL,
   xlab.pos = 1, ylab = "auto", hidden.states.title = "Hidden states",
   yaxis = FALSE, ylab.pos = "auto", cex.lab = 1, cex.axis = 1, ...)
@@ -33,7 +33,7 @@ or \code{"both"} for observations and hidden paths together.}
 plots and \code{"d"} for state distribution plots (the default). See
 \code{\link{seqplot}} for details.}
 
-\item{tlim}{Indexes of the subjects to be plotted (the default is 0, 
+\item{tlim}{Indexes of the subjects to be plotted (the default is 0,
 i.e. all subjects are plotted). For example, \code{tlim = 1:10} plots
 the first ten subjects in data.}
 
@@ -64,19 +64,23 @@ Transition rates are used for defining substitution costs if needed. See
 \item{with.missing}{Controls whether missing states are included in state
 distribution plots (\code{type = "d"}). The default is \code{FALSE}.}
 
-\item{title}{Main title for the graphic. The default is \code{NA}: if
-\code{title.n = TRUE}, only the number of subjects is plotted. \code{FALSE}
-prints no title, even when \code{title.n = TRUE}.}
+\item{missing.color}{Alternative color for representing missing values
+in the sequences. By default, this color is taken from the \code{missing.color}
+attribute of the sequence object.}
 
-\item{title.n}{Controls whether the number of subjects is printed in the
-title of the plot. The default is \code{TRUE}: n is plotted if \code{title}
+\item{title}{A vector of main titles for the graphics. The default is \code{NA}: if
+\code{title.n = TRUE}, the name of the cluster and the number of subjects is plotted. 
+\code{FALSE} prints no titles, even when \code{title.n = TRUE}.}
+
+\item{title.n}{Controls whether the number of subjects is printed in the main
+titles of the plots. The default is \code{TRUE}: n is plotted if \code{title}
 is anything but \code{FALSE}.}
 
-\item{cex.title}{Expansion factor for setting the size of the font for the
-title. The default value is 1. Values lesser than 1 will reduce the size of
+\item{cex.title}{Expansion factor for setting the size of the font for the main
+titles. The default value is 1. Values lesser than 1 will reduce the size of
 the font, values greater than 1 will increase the size.}
 
-\item{title.pos}{Controls the position of the main title of the plot. The
+\item{title.pos}{Controls the position of the main titles of the plots. The
 default value is 1. Values greater than 1 will place the title higher.}
 
 \item{withlegend}{Defines if and where the legend for the states is plotted.
