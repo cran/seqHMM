@@ -8,7 +8,7 @@ unsigned int optCoef(arma::mat& weights, const arma::ucube& obs, const arma::cub
 
   int iter = 0;
   double change = 1.0;
-  while ((change > 1e-8) & (iter < 100)) {
+  while ((change > 1e-10) & (iter < 100)) {
     arma::vec tmpvec(X.n_cols * (weights.n_rows - 1));
     bool solve_ok = arma::solve(tmpvec, hCoef(weights, X),
         gCoef(obs, bsi, emission, weights, X, cumsumstate, numberOfStates));
@@ -48,8 +48,8 @@ arma::vec gCoef(const arma::ucube& obs, const arma::mat& bsi,
   double tmp;
 
   for (unsigned int k = 0; k < obs.n_slices; k++) {
-    for (int jj = 1; jj < numberOfStates.n_elem; jj++) {
-      for (int j = 0; j < emission.n_rows; j++) {
+    for (unsigned int jj = 1; jj < numberOfStates.n_elem; jj++) {
+      for (unsigned int j = 0; j < emission.n_rows; j++) {
         tmp = 1.0;
         for (unsigned int r = 0; r < obs.n_rows; r++) {
           tmp *= emission(j, obs(r, 0, k), r);

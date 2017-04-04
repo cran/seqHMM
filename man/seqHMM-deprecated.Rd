@@ -56,8 +56,10 @@ If the relative change of the final model of the restart phase is larger than th
 for the original EM phase, the final model is re-estimated with the original \code{reltol}
 and \code{maxeval} at the end of the EM step.}
 \item{n_optimum}{Save the log-likelihood values of the \code{n_optimum} best
-models (from all estimated models including the original).
+models (from all estimated models including the the first EM run.).
 The default is \code{min(times + 1, 25)}.}
+\item{use_original}{If \code{TRUE}. Use the initial values of the input model as starting 
+points for the permutations. Otherwise permute the results of the first EM run.}
 }
 }
 }}
@@ -82,14 +84,14 @@ The default is \code{min(times + 1, 25)}.}
 
 \item{lb}{Lower and upper bounds for parameters in Softmax parameterization.
 The default interval is \eqn{[pmin(-25, 2*initialvalues), pmax(25, 2*initialvalues)]},
-except for beta coefficients,
+except for gamma coefficients,
 where the scale of covariates is taken into account.
 Note that it might still be a good idea to scale covariates around unit scale.
 Bounds are used only in the global optimization step.}
 
 \item{ub}{Lower and upper bounds for parameters in Softmax parameterization.
 The default interval is \eqn{[pmin(-25, 2*initialvalues), pmax(25, 2*initialvalues)]},
-except for beta coefficients,
+except for gamma coefficients,
 where the scale of covariates is taken into account.
 Note that it might still be a good idea to scale covariates around unit scale.
 Bounds are used only in the global optimization step.}

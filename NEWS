@@ -1,4 +1,34 @@
-seqHMM 1.0.6 (Release date: )
+seqHMM 1.0.7 (Release date: 2017-04-04)
+==============
+
+* Added supplementary vignettes for visualization, estimation, and theoretical 
+  background.
+* Corrected a "feature" of the scaled forward-backward algorithm which caused 
+  potential numerical issues in backward probabilities. More specifically, 
+  previously the scaled backward variable at time t was scaled with the scaling 
+  factors c_[t+1] of the forward variable, instead of c_t. In typical 
+  applications this did not cause any problems, but some models which previously 
+  caused problems can work now without resorting to the log-space algorithm.
+* Scaling factors used in forward-backward algorithms are now stored as 1/c_t,
+  where c_t are the scaling factors from older versions of seqHMM.
+* The build_mm function now automatically estimates model parameters from the 
+  observed initial state distribution and transition counts.
+* Added automatic starting values for build_hmm, build_mhmm, build_mmm, and 
+  build_lcm.
+  
+Bug fixes:
+
+* Fixed a bug from version 1.0.6 where the EM algorithm with restarts did not 
+  work as efficiently as intended due to changes in initializing emission matrices. 
+  More specifically, the previous version used Rcpp sugar which does not use deep 
+  copies in case of arma::cubes, which resulted the subsequent EM runs to depend 
+  on the first optimum (affecting especially the identification of non-zero 
+  emission probabilities).
+* Fixed a bug in the ssp function where tlim was taken account of after sorting 
+  sequences and computing hidden paths (now cases are chosen before other actions).
+
+
+seqHMM 1.0.6 (Release date: 2016-08-01)
 ==============
 
 * Argument diag_c in simulate_transition_probs is now used also in cases where
@@ -7,7 +37,8 @@ seqHMM 1.0.6 (Release date: )
   (previously 1e-12), and the reltol and maxeval values for restarts are by
   default taken from the initial EM algorithm (previosly reltol was 1e-8 and
   maxeval = 100 for restarts).
-* Fixed hidden states labels for ssp functions (previously always used the default values).
+* Fixed hidden states labels for ssp functions (previously always used the 
+  default values).
 
 Bug fixes:
 

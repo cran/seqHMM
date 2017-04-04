@@ -2,31 +2,11 @@
 #include "seqHMM.h"
 
 // [[Rcpp::export]]
-
 List objective(const arma::mat& transition, const arma::cube& emission,
   const arma::vec& init, arma::ucube& obs, const arma::umat& ANZ,
   const arma::ucube& BNZ, const arma::uvec& INZ, const arma::uvec& nSymbols, unsigned int threads) {
 
   arma::vec grad(arma::accu(ANZ) + arma::accu(BNZ) + arma::accu(INZ), arma::fill::zeros);
-
-  // arma::cube alpha(emission.n_rows, obs.n_cols, obs.n_slices); //m,n,k
-  // arma::cube beta(emission.n_rows, obs.n_cols, obs.n_slices); //m,n,k
-  // arma::mat scales(obs.n_cols, obs.n_slices); //m,n,k
-  //
-  // internalForward(transition, emission, init, obs, alpha, scales, threads);
-  // if (!scales.is_finite()) {
-  //   grad.fill(-arma::datum::inf);
-  //   return List::create(Named("objective") = arma::datum::inf, Named("gradient") = wrap(grad));
-  // }
-  //
-  // internalBackward(transition, emission, obs, beta, scales, threads);
-  // if (!beta.is_finite()) {
-  //   grad.fill(-arma::datum::inf);
-  //   return List::create(Named("objective") = arma::datum::inf, Named("gradient") = wrap(grad));
-  // }
-
-  //use this instead of local vectors with grad += grad_k;, uses more memory but gives bit-identical results
-  //arma::mat gradmat(arma::accu(ANZ) + arma::accu(BNZ) + arma::accu(INZ), obs.n_slices);
 
   unsigned int error = 0;
   double ll = 0;
@@ -62,7 +42,7 @@ List objective(const arma::mat& transition, const arma::cube& emission,
                 for (unsigned int r = 0; r < obs.n_rows; r++) {
                   tmp *= emission(j, obs(r, t + 1, k), r);
                 }
-                gradArow(j) += alpha(i, t) * tmp * beta(j, t + 1) / scales(t + 1);
+                gradArow(j) += alpha(i, t) * tmp * beta(j, t + 1);
               }
 
             }
@@ -83,7 +63,7 @@ List objective(const arma::mat& transition, const arma::cube& emission,
               gradB.eye();
               gradB.each_row() -= emission.slice(r).row(i).subvec(0, nSymbols(r) - 1);
               gradB.each_col() %= emission.slice(r).row(i).subvec(0, nSymbols(r) - 1).t();
-              for (int j = 0; j < nSymbols(r); j++) {
+              for (unsigned int j = 0; j < nSymbols(r); j++) {
                 if (obs(r, 0, k) == j) {
                   double tmp = 1.0;
                   for (unsigned int r2 = 0; r2 < obs.n_rows; r2++) {
@@ -91,7 +71,7 @@ List objective(const arma::mat& transition, const arma::cube& emission,
                       tmp *= emission(i, obs(r2, 0, k), r2);
                     }
                   }
-                  gradBrow(j) += init(i) * tmp * beta(i, 0) / scales(0);
+                  gradBrow(j) += init(i) * tmp * beta(i, 0);
                 }
                 for (unsigned int t = 0; t < (obs.n_cols - 1); t++) {
                   if (obs(r, t + 1, k) == j) {
@@ -102,7 +82,7 @@ List objective(const arma::mat& transition, const arma::cube& emission,
                       }
                     }
                     gradBrow(j) += arma::dot(alpha.col(t), transition.col(i)) * tmp
-                      * beta(i, t + 1) / scales(t + 1);
+                      * beta(i, t + 1);
                   }
                 }
 
@@ -130,7 +110,7 @@ List objective(const arma::mat& transition, const arma::cube& emission,
             for (unsigned int r = 0; r < obs.n_rows; r++) {
               tmp *= emission(j, obs(r, 0, k), r);
             }
-            gradIrow(j) += tmp * beta(j, 0) / scales(0);
+            gradIrow(j) += tmp * beta(j, 0);
           }
 
           gradIrow = gradI * gradIrow;
@@ -141,7 +121,7 @@ List objective(const arma::mat& transition, const arma::cube& emission,
 #pragma omp atomic
           error++;
         } else {
-          ll += arma::sum(log(scales));
+          ll -= arma::sum(log(scales));
 #pragma omp critical
           grad += grad_k;
          // gradmat.col(k) = grad_k;

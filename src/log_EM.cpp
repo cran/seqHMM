@@ -3,13 +3,16 @@
 #include "seqHMM.h"
 // [[Rcpp::export]]
 
-List log_EM(arma::mat transition, arma::cube emission, arma::vec init,
-    const arma::ucube& obs, const arma::uvec& nSymbols, int itermax, double tol, int trace, unsigned int threads) {
+List log_EM(const arma::mat& transition_, const arma::cube& emission_, 
+  const arma::vec& init_, const arma::ucube& obs, const arma::uvec& nSymbols, 
+  int itermax, double tol, int trace, unsigned int threads) {
 
-  transition = log(transition);
-  emission = log(emission);
-  init = log(init);
-
+  // Make sure we don't alter the original vec/mat/cube
+  // needed for cube, in future maybe in other cases as well
+  arma::cube emission = log(emission_);
+  arma::mat transition = log(transition_);
+  arma::vec init = log(init_);
+  
   arma::cube alpha(emission.n_rows, obs.n_cols, obs.n_slices); //m,n,k
   arma::cube beta(emission.n_rows, obs.n_cols, obs.n_slices); //m,n,k
 
@@ -68,7 +71,7 @@ List log_EM(arma::mat transition, arma::cube emission, arma::vec init,
       }
 
       for (unsigned int r = 0; r < emission.n_slices; r++) {
-        for (int l = 0; l < nSymbols(r); l++) {
+        for (unsigned int l = 0; l < nSymbols(r); l++) {
           for (unsigned int i = 0; i < emission.n_rows; i++) {
             if (emission(i, l, r) > -arma::datum::inf) {
               arma::vec tmpn(obs.n_cols);
