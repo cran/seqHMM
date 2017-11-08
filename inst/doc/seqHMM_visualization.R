@@ -24,14 +24,14 @@ seqIplot <- ssp(
   biofam_seq[1:100, ], type = "I", sortv = "mds.obs", sort.channel = 1,
   xtlab = 15:30, xlab = "Age", 
   title.n = FALSE, ylab = "", title = "Sequences", title.pos = 0.5,
-  legend.prop = 0.63, withlegend = FALSE)
+  legend.prop = 0.63, with.legend = FALSE)
 
 
 seqdplot <- ssp(
   biofam_seq[1:100, ], type = "d",
   xtlab = 15:30, xlab = "Age", yaxis = TRUE, ylab = "Proportion",
   title.n = FALSE, title = "State distributions",
-  legend.prop = 0.63, withlegend = FALSE)
+  legend.prop = 0.63, with.legend = FALSE)
 
 gridplot(list(seqIplot, seqdplot), ncol = 3, col.prop = c(0.35, 0.4, 0.25))
 
@@ -58,7 +58,7 @@ plot(hmm_biofam,
   # fixing axes to the right scale
   xlim = c(0.5, 4.5), ylim = c(-0.5, 1.5), rescale = FALSE,
   # different legend properties
-  withlegend = "bottom", legend.prop = 0.3, ncol.legend = 2,
+  with.legend = "bottom", legend.prop = 0.3, ncol.legend = 2,
   # distance of vertex labels to vertices
   vertex.label.dist = 1.1,
   # threshold for emission probabilities not shown as separate slices
@@ -122,7 +122,7 @@ ssp_f <- ssp(
   list(marr_seq[biofam3c$covariates$sex == "woman",],
        child_seq[biofam3c$covariates$sex == "woman",],
        left_seq[biofam3c$covariates$sex == "woman",]),
-  type = "I", sortv = "mds.obs", withlegend = FALSE, 
+  type = "I", sortv = "mds.obs", with.legend = FALSE, 
   title = "Women", xtlab = 15:30, ylab.pos = c(1, 2, 1), 
   ylab = c("Married", "Children", "Residence"))
 
@@ -150,7 +150,7 @@ gridplot(
 ## ----gridplot3, fig.width=5.5, fig.height=4, dev.args=list(pointsize=10), echo=TRUE, fig.cap="Another example of \\texttt{gridplot}. Showing three-channel sequences and state distributions of combined states for women.", fig.align='center', fig.keep='last', cache = TRUE----
 
 ssp_f3 <- update(
-  ssp_f, withlegend = TRUE, legend.prop = 0.4, ylab.pos = 1, 
+  ssp_f, with.legend = TRUE, legend.prop = 0.4, ylab.pos = 1, 
   cex.lab = 0.9, cex.axis = 0.8, cex.legend = 0.9)
 
 ssp_f4 <- ssp(
@@ -158,10 +158,10 @@ ssp_f4 <- ssp(
   type = "d", title.n = FALSE, xtlab = 15:30, 
   title = "State distributions for \n combined states (women)", 
   title.pos = 1.5, ylab = "", xlab = "Age",
-  withlegend = "bottom", ncol.legend = 2, 
+  with.legend = "bottom", ncol.legend = 2, 
   cex.lab = 0.9, cex.axis = 0.8, cex.legend = 0.9)
 
-gridplot(list(ssp_f3, ssp_f4), withlegend = FALSE, ncol = 2, 
+gridplot(list(ssp_f3, ssp_f4), with.legend = FALSE, ncol = 2, 
          col.prop = c(0.55, 0.45))
 
 ## ----code_plottingHMMbasic, fig.height=5, fig.width=8, echo=TRUE, fig.align='center', fig.keep='last', cache = TRUE, eval = TRUE, fig.cap="A default plot of a hidden Markov model."----

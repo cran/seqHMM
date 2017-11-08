@@ -11,7 +11,7 @@ HMMplot <- function(x, layout = "horizontal", pie = TRUE,
                     trim = 1e-15,
                     combine.slices = 0.05, combined.slice.color = "white",
                     combined.slice.label = "others",
-                    withlegend = "bottom", ltext = NULL, legend.prop = 0.5,
+                    with.legend = "bottom", ltext = NULL, legend.prop = 0.5,
                     cex.legend = 1, ncol.legend = "auto", cpal = "auto",
                     legend.pos = "center", main = "auto", ...){
 
@@ -45,13 +45,13 @@ HMMplot <- function(x, layout = "horizontal", pie = TRUE,
   }
 
   choices <- c(TRUE, FALSE, "bottom", "top", "left", "right")
-  ind <- pmatch(withlegend, choices)
+  ind <- pmatch(with.legend, choices)
   if (is.na(ind)) {
-    stop("Argument withlegend must be one of TRUE, FALSE, \"bottom\", \"right\", \"top\", or \"left\".")
+    stop("Argument with.legend must be one of TRUE, FALSE, \"bottom\", \"right\", \"top\", or \"left\".")
   }
-  withlegend <- choices[ind]
-  if (withlegend %in% c(TRUE, "auto")){
-    withlegend <- "bottom"
+  with.legend <- choices[ind]
+  if (with.legend %in% c(TRUE, "auto")){
+    with.legend <- "bottom"
   }
 
 
@@ -61,8 +61,8 @@ HMMplot <- function(x, layout = "horizontal", pie = TRUE,
   }
 
   # No slices -> no legends needed
-  if (pie == FALSE && withlegend != FALSE) {
-    withlegend <- FALSE
+  if (pie == FALSE && with.legend != FALSE) {
+    with.legend <- FALSE
   }
 
 
@@ -101,7 +101,7 @@ HMMplot <- function(x, layout = "horizontal", pie = TRUE,
     if (is.na(ind)) {
       stop("Argument vertex.label.dist only accepts the value \"auto\" or a numerical vector.")
     }
-    vertex.label.dist <- vertex.size * 0.4 / 10
+    vertex.label.dist <- vertex.size * 0.4 / 3.5
   } else if (length(vertex.label.dist) > 1 && length(vertex.label.dist) != x$n_states){
     warning("The length of the vector provided for the argument \"vertex.label.dist\" does not match the number of edges.")
     vertex.label.dist <- rep(vertex.label.dist, length.out = length(x$n_states))
@@ -178,12 +178,12 @@ HMMplot <- function(x, layout = "horizontal", pie = TRUE,
   } else {
     pie.colors <- cpal
   }
-  if (withlegend != FALSE) {
+  if (with.legend != FALSE) {
     pie.colors.l <- pie.colors
   }
 
   # Legend position and number of columns
-  if (withlegend != FALSE && pie == TRUE) {
+  if (with.legend != FALSE && pie == TRUE) {
     if (!is.null(ltext)) {
       if (length(ltext) != x$n_symbols) {
         stop("The length of the argument ltext does not match the number of (combined) observed states.")
@@ -260,7 +260,7 @@ HMMplot <- function(x, layout = "horizontal", pie = TRUE,
     # If slices are combined
     if (combine.slices > 0 &&
         !all(unlist(pie.values)[unlist(pie.values) > 0] > combine.slices)) {
-      if (withlegend != FALSE) {
+      if (with.legend != FALSE) {
         pie.colors.l <- NULL
         lt <- NULL
       }
@@ -272,18 +272,18 @@ HMMplot <- function(x, layout = "horizontal", pie = TRUE,
         # Colors and labels for large slices
         pie.values[[i]]  <- c(pie.values[[i]], cs.prob)
         # Texts and colors for legends
-        if (withlegend != FALSE) {
+        if (with.legend != FALSE) {
           pie.colors.l  <- c(pie.colors.l, pie.colors[pie.values[[i]][1:(length(pie.values[[i]]) - 1)] >= combine.slices])
           lt  <- c(lt, ltext[pie.values[[i]][1:(length(pie.values[[i]]) - 1)] >= combine.slices])
         }
       }
       pie.colors <- c(pie.colors, combined.slice.color)
-      if (withlegend != FALSE) {
+      if (with.legend != FALSE) {
         ltext <- c(unique(lt), combined.slice.label)
         pie.colors.l <- c(unique(pie.colors.l), combined.slice.color)
       }
       if (ncol.legend == "auto") {
-        if (withlegend == "bottom" || withlegend == "top") {
+        if (with.legend == "bottom" || with.legend == "top") {
           ncol.legend <- ceiling(length(pie.colors) / 4)
         } else {
           ncol.legend <- 1
@@ -293,7 +293,7 @@ HMMplot <- function(x, layout = "horizontal", pie = TRUE,
       # Slices not combined
     } else {
       if (ncol.legend == "auto") {
-        if (withlegend == "bottom" || withlegend == "top") {
+        if (with.legend == "bottom" || with.legend == "top") {
           ncol.legend <- ceiling(ncol(x$emission_probs) / 4)
         } else {
           ncol.legend <- 1
@@ -304,7 +304,7 @@ HMMplot <- function(x, layout = "horizontal", pie = TRUE,
     if (!is.matrix(layout) && !is.function(layout) &&
          (layout == "horizontal" || layout == "vertical")) {
       if (length(dots) > 0) {
-        plotcall <- as.call(c(list(plot.igraph2, g1, layout = glayout,
+        plotcall <- as.call(c(list(plot.igraph, g1, layout = glayout,
                          vertex.shape = "pie", vertex.pie = pie.values,
                          vertex.pie.color = list(pie.colors),
                          vertex.size = vertex.size,
@@ -317,7 +317,7 @@ HMMplot <- function(x, layout = "horizontal", pie = TRUE,
                          edge.arrow.size = edge.arrow.size,
                          xlim = xlim, ylim = ylim, rescale=rescale, main = main), dots))
       } else {
-        plotcall <- call("plot.igraph2", g1, layout = glayout,
+        plotcall <- call("plot.igraph", g1, layout = glayout,
                          vertex.shape = "pie", vertex.pie = pie.values,
                          vertex.pie.color = list(pie.colors),
                          vertex.size = vertex.size,
@@ -332,7 +332,7 @@ HMMplot <- function(x, layout = "horizontal", pie = TRUE,
       }
     } else {
       if (length(dots) > 0) {
-        plotcall <- as.call(c(list(plot.igraph2, g1, layout = glayout,
+        plotcall <- as.call(c(list(plot.igraph, g1, layout = glayout,
                          vertex.shape = "pie", vertex.pie = pie.values,
                          vertex.pie.color = list(pie.colors),
                          vertex.size = vertex.size,
@@ -344,7 +344,7 @@ HMMplot <- function(x, layout = "horizontal", pie = TRUE,
                          edge.label.family = edge.label.family,
                          edge.arrow.size = edge.arrow.size, main = main), dots))
       } else {
-        plotcall <- call("plot.igraph2", g1, layout = glayout,
+        plotcall <- call("plot.igraph", g1, layout = glayout,
                          vertex.shape = "pie", vertex.pie = pie.values,
                          vertex.pie.color = list(pie.colors),
                          vertex.size = vertex.size,
@@ -361,7 +361,7 @@ HMMplot <- function(x, layout = "horizontal", pie = TRUE,
     if(!is.matrix(layout) && !is.function(layout) &&
          (layout == "horizontal" || layout == "vertical")){
       if (length(dots) > 0) {
-        plotcall <- as.call(c(list(plot.igraph2, g1, layout = glayout,
+        plotcall <- as.call(c(list(plot.igraph, g1, layout = glayout,
                          vertex.size = vertex.size,
                          vertex.label = vertex.label, vertex.label.dist = vertex.label.dist,
                          vertex.label.degree = vertex.label.pos,
@@ -371,7 +371,7 @@ HMMplot <- function(x, layout = "horizontal", pie = TRUE,
                          edge.label.family = edge.label.family,
                          xlim = xlim, ylim = ylim, rescale = rescale, main = main), dots))
       } else {
-        plotcall <- call("plot.igraph2", g1, layout = glayout,
+        plotcall <- call("plot.igraph", g1, layout = glayout,
                          vertex.size = vertex.size,
                          vertex.label = vertex.label, vertex.label.dist = vertex.label.dist,
                          vertex.label.degree = vertex.label.pos,
@@ -383,7 +383,7 @@ HMMplot <- function(x, layout = "horizontal", pie = TRUE,
       }
     } else {
       if(length(dots) > 0){
-        plotcall <- as.call(c(list(plot.igraph2, g1, layout = glayout,
+        plotcall <- as.call(c(list(plot.igraph, g1, layout = glayout,
                          vertex.size = vertex.size,
                          vertex.label = vertex.label, vertex.label.dist = vertex.label.dist,
                          vertex.label.degree = vertex.label.pos,
@@ -392,7 +392,7 @@ HMMplot <- function(x, layout = "horizontal", pie = TRUE,
                          edge.label = edge.label,
                          edge.label.family = edge.label.family, main = main), dots))
       } else {
-        plotcall <- call("plot.igraph2", g1, layout = glayout,
+        plotcall <- call("plot.igraph", g1, layout = glayout,
                          vertex.size = vertex.size,
                          vertex.label = vertex.label, vertex.label.dist = vertex.label.dist,
                          vertex.label.degree = vertex.label.pos,
@@ -406,9 +406,9 @@ HMMplot <- function(x, layout = "horizontal", pie = TRUE,
 
 
   # Plotting legend
-  if (withlegend != FALSE && pie == TRUE) {
+  if (with.legend != FALSE && pie == TRUE) {
     legendcall <- call("seqlegend", seqdata = x$observations, cpal = pie.colors.l, ltext = ltext,
-                       position = legend.pos, fontsize = cex.legend, ncol = ncol.legend,
+                       position = legend.pos, cex = cex.legend, ncol = ncol.legend,
                        with.missing = FALSE)
 
   } else {

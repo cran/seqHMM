@@ -41,7 +41,7 @@ ssplot(list("Marriage" = marr_seq, "Parenthood" = child_seq,
 ssp_f <- ssp(list(marr_seq[biofam3c$covariates$sex == "woman",],
     child_seq[biofam3c$covariates$sex == "woman",],
     left_seq[biofam3c$covariates$sex == "woman",]),
-  type = "I", sortv = "mds.obs", withlegend = FALSE, title = "Women", 
+  type = "I", sortv = "mds.obs", with.legend = FALSE, title = "Women", 
   ylab.pos = c(1, 2, 1), xtlab = 15:30, ylab = c("Married", "Children", 
     "Residence"))
 
@@ -97,7 +97,7 @@ plot(hmm_biofam, layout = vertex_layout, xlim = c(0.5, 3.5),
   ylim = c(-1.5, 1), rescale = FALSE, vertex.size = 50, 
   vertex.label.pos = c("left", "top", "bottom", "right", "left"),
   edge.curved = FALSE, edge.width = 1, edge.arrow.size = 1, 
-  withlegend = "left", legend.prop = 0.4, label.signif = 1, 
+  with.legend = "left", legend.prop = 0.4, label.signif = 1, 
   combine.slices = 0, cpal = colorpalette[[30]][c(14:5)])
 
 ## ----ssplotHMM, fig.width=5.5, fig.height=5.5, dev.args=list(pointsize=10), fig.cap="Using the \\code{ssplot} function for an \\code{hmm} object makes it easy to plot the observed sequences together with the most probable paths of hidden states given the model.", fig.align='center', fig.keep='last', cache = FALSE, echo = FALSE----
@@ -142,7 +142,7 @@ attr(left_seq, "cpal") <- c("lightblue", "red3")
 #  ssp_f <- ssp(list(marr_seq[biofam3c$covariates$sex == "woman",],
 #      child_seq[biofam3c$covariates$sex == "woman",],
 #      left_seq[biofam3c$covariates$sex == "woman",]),
-#    type = "I", sortv = "mds.obs", withlegend = FALSE, title = "Women",
+#    type = "I", sortv = "mds.obs", with.legend = FALSE, title = "Women",
 #    ylab.pos = c(1, 2, 1), xtlab = 15:30, ylab = c("Married", "Children",
 #      "Residence"))
 #  
@@ -287,7 +287,7 @@ plot(hmm_biofam)
 #    ylim = c(-1.5, 1), rescale = FALSE, vertex.size = 50,
 #    vertex.label.pos = c("left", "top", "bottom", "right", "left"),
 #    edge.curved = FALSE, edge.width = 1, edge.arrow.size = 1,
-#    withlegend = "left", legend.prop = 0.4, label.signif = 1,
+#    with.legend = "left", legend.prop = 0.4, label.signif = 1,
 #    combine.slices = 0, cpal = colorpalette[[30]][c(14:5)])
 
 ## ----code_ssplotHMM, ref.label = 'ssplotHMM', eval = FALSE, echo = TRUE----
