@@ -2,7 +2,7 @@
 library(knitr)
 opts_chunk$set(concordance = TRUE, tidy = FALSE)
 options(prompt = "R> ", continue = "+  ", width = 76, useFancyQuotes = FALSE)
-render_sweave()
+
 
 ## ----settingdata, message=FALSE, cache=FALSE, echo = FALSE, eval = TRUE----
 library("seqHMM")
