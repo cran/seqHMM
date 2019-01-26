@@ -16,7 +16,7 @@
 #'   the sequences, or a list of such objects (one for each channel).
 #' @param n_states A numerical vector giving the number of hidden states in each submodel 
 #' (not used if starting values for model parameters are given with 
-#' \code{initial_probs}, \code{transition_probs}, and \code{emission_probs}).
+#' \code{initial_probs}, \code{transition_probs}, or \code{emission_probs}).
 #' @param transition_probs A list of matrices of transition
 #'   probabilities for the submodel of each cluster.
 #' @param emission_probs A list which contains matrices of emission probabilities or
@@ -66,7 +66,10 @@
 #' \code{\link{summary.mhmm}} for a summary of a MHMM; \code{\link{separate_mhmm}} for
 #' reorganizing a MHMM into a list of separate hidden Markov models; and
 #' \code{\link{plot.mhmm}} for plotting \code{mhmm} objects.
-#'
+#' 
+#' @references Helske S. and Helske J. (2019). Mixture Hidden Markov Models for Sequence Data: The seqHMM Package in R,
+#' Journal of Statistical Software, 88(3), 1-32. doi:10.18637/jss.v088.i03
+#' 
 #' @examples
 #'
 #' data("biofam3c")
@@ -214,8 +217,8 @@ build_mhmm <-
            channel_names = NULL, ...){
     
     
-    
-    if (missing(n_states)) {
+    # if any initial values are given, ignore n_states and use these
+    if (!missing(transition_probs) || !missing(initial_probs) || !missing(emission_probs)) {
       
       if (missing(transition_probs) || missing(initial_probs) || missing(emission_probs)) {
         stop(paste("Provide either n_states or all three of initial_probs, transition_probs, and emission_probs."))
@@ -388,7 +391,9 @@ build_mhmm <-
       
     # Simulate starting values
     } else {
-      
+      if (missing(n_states)) {
+        stop(paste("Provide either n_states or all three of initial_probs, transition_probs, and emission_probs."))
+      }
       n_clusters <- length(n_states)
       
       if (is.null(cluster_names)) {

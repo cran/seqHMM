@@ -86,7 +86,7 @@ options(prompt = "R> ", continue = "+  ", width = 76, useFancyQuotes = FALSE)
 
 @
 
-A CRAN-compliant modification of a paper accepted to be published in \emph{Journal of Statistical Software}.
+Vignette based on the corresponding paper at \emph{Journal of Statistical Software} \citep{JSS2019}.
 
 \section{Introduction}
 
