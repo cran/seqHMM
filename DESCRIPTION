@@ -1,8 +1,8 @@
 Package: seqHMM
 Title: Mixture Hidden Markov Models for Social Sequence Data and Other
         Multivariate, Multichannel Categorical Time Series
-Version: 1.0.11
-Date: 2019-04-09
+Version: 1.0.12
+Date: 2019-04-11
 Authors@R: 
     c(person(given = "Jouni",
            family = "Helske",
@@ -40,9 +40,9 @@ BugReports: https://github.com/helske/seqHMM/issues
 VignetteBuilder: knitr
 RoxygenNote: 6.1.1
 NeedsCompilation: yes
-Packaged: 2019-04-09 13:20:04 UTC; jouhe21
+Packaged: 2019-04-11 07:39:06 UTC; jouhe21
 Author: Jouni Helske [aut, cre] (<https://orcid.org/0000-0001-7130-793X>),
   Satu Helske [aut] (<https://orcid.org/0000-0003-0532-0153>)
 Maintainer: Jouni Helske <jouni.helske@iki.fi>
 Repository: CRAN
-Date/Publication: 2019-04-09 15:22:40 UTC
+Date/Publication: 2019-04-11 11:52:40 UTC
