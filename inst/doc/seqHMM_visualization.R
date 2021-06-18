@@ -65,7 +65,7 @@ plot(hmm_biofam,
   combine.slices = 0.02, combined.slice.label = "others (emission prob. < 0.02)"
   )
 
-## ----settingsequences, message = FALSE-----------------------------------
+## ----settingsequences, message = FALSE------------------------------------
 library("seqHMM")
 
 data("biofam3c")
@@ -167,7 +167,7 @@ gridplot(list(ssp_f3, ssp_f4), with.legend = FALSE, ncol = 2,
 ## ----code_plottingHMMbasic, fig.height=5, fig.width=8, echo=TRUE, fig.align='center', fig.keep='last', cache = TRUE, eval = TRUE, fig.cap="A default plot of a hidden Markov model."----
 plot(hmm_biofam)
 
-## ----HMMplotCode, echo=TRUE, eval=FALSE----------------------------------
+## ----HMMplotCode, echo=TRUE, eval=FALSE-----------------------------------
 #  plot(hmm_biofam,
 #    layout = matrix(c(1, 2, 3, 4, 2,
 #                      1, 1, 1, 1, 0), ncol = 2),
