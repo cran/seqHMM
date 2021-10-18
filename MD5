@@ -1,6 +1,6 @@
-5ef0df4b77e7393f05a04eb0572e11dd *DESCRIPTION
+8217fa3711ced6874b0c8f161cfac7ff *DESCRIPTION
 1c5fb114d46fa0641b61b07ba8530259 *NAMESPACE
-4c30a17da500981852fa66ede11b990c *NEWS
+70a3e6d6bb70cdb13b9d986993ad56cd *NEWS
 db7ba51f9c19b4c982607734daf9c9ca *R/HMMplot.R
 a5213fbc85c01f25c9e2ba1a1757542a *R/RcppExports.R
 f978e13e72f0d019967bd6b140bf63f3 *R/SSPlotter.R
@@ -14,7 +14,7 @@ f4d1a4e22f376f89937b06c6f4fd0481 *R/check_deprecated_args.R
 b42283b5a005f5dedf6e1946586cbe07 *R/colorpalette.R
 c501731291a9aa14d341e60442cbe0fd *R/combine_models.R
 944b796fc86b75a4d14e6cdc1119f33c *R/estimate_coef.R
-c195c1764741da67f5ce67feb2a2564e *R/fit_model.R
+d8c0b1107f837e3a77a4c65610a02cef *R/fit_model.R
 800812905769a74d2d15f963b34aa021 *R/forwardBackward.R
 7576f537f3b81e5a3e4741a1d05c4262 *R/gridplot.R
 24ab12fa4aab69eab041cdb0e9dbeb0b *R/hidden_paths.R
@@ -63,14 +63,14 @@ fd3c82e79109fd44a48e6d07597f4d19 *data/hmm_mvad.rda
 e098093f930ccc2fe3efff37b06d0a0e *inst/CITATION
 60ff1a64048dcb31aebb9926f9dd88a7 *inst/doc/seqHMM.R
 24c5ce32755a2e64bc6c27921379ca5f *inst/doc/seqHMM.Rnw
-fd59fd09c21035c29640efd6743f4a66 *inst/doc/seqHMM.pdf
+fb638efe42e1747437ef45a4b0bccf8a *inst/doc/seqHMM.pdf
 dd9f06c2b7ed111820a81bb3c50d0d2b *inst/doc/seqHMM_algorithms.Rnw
-dade4ddb71ec22af1db480b27cfc2e01 *inst/doc/seqHMM_algorithms.pdf
+357d2309d165fb82f79bac55c6582afb *inst/doc/seqHMM_algorithms.pdf
 d20513890839823241bd1d2d4e14f8ef *inst/doc/seqHMM_estimation.Rnw
-9708c89895a93e7c110880ff51691fce *inst/doc/seqHMM_estimation.pdf
+10b2d7cf0d2de96b3966ab406b53c1dd *inst/doc/seqHMM_estimation.pdf
 939dc60709f4a9f76b262aad9b4df2a4 *inst/doc/seqHMM_visualization.R
 60848cbcd784503c8ac3e6a5172cc06c *inst/doc/seqHMM_visualization.Rnw
-9b51a898ebf10ac490453cac8ff1c3af *inst/doc/seqHMM_visualization.pdf
+c4f52e08c8e7151124e8dddf0299e1fc *inst/doc/seqHMM_visualization.pdf
 352fe7097a4aff75bc41d249e4a218d5 *man/TraMineR_imports.Rd
 8fb0c8eec640dc5e8ca8900e33df3f5d *man/biofam3c.Rd
 30d889294d7e7fc4298302af441f6acd *man/build_hmm.Rd
@@ -80,7 +80,7 @@ c43f95d8132bc6c741897dc1da2141b7 *man/build_lcm.Rd
 b6015bc7603e08859bb86d4afb72e0ee *man/build_mmm.Rd
 af62da317ef1f97b95cdf2a9946ee284 *man/colorpalette.Rd
 d6ddf358aef3b23a0b2c60e3fb578f02 *man/estimate_coef.Rd
-2a031eb3195ce6309bf8b4d7430770ed *man/fit_model.Rd
+4429920a7be4c59489b7c48f18ef85f1 *man/fit_model.Rd
 dc1606c7ceba8f24162f3d5683a409b1 *man/forward_backward.Rd
 3dee2de4b42ef208ced0dc4a86911a5f *man/gridplot.Rd
 1b416193366662c75a37f4dadb2bb64a *man/hidden_paths.Rd
