@@ -184,8 +184,11 @@ round(sc_emiss, 3)
 sc_initmod <- build_hmm(observations = biofam_seq, initial_probs = sc_init,
   transition_probs = sc_trans, emission_probs = sc_emiss)
 
-## ----code_sc_fitHMM, cache=FALSE------------------------------------------
-sc_fit <- fit_model(sc_initmod)
+## ----code_sc_fitHMM, cache=FALSE, eval=FALSE------------------------------
+#  sc_fit <- fit_model(sc_initmod)
+
+## ----load_sc_fit, cache=FALSE, echo=FALSE---------------------------------
+sc_fit <- readRDS("sc_fit.rds")
 
 ## ----code_sc_results1, cache=FALSE----------------------------------------
 sc_fit$logLik
@@ -229,44 +232,47 @@ data("hmm_biofam")
 # hmm_biofam <- mc_fit$model
 BIC(hmm_biofam)
 
-## ----code_MHMM, cache=FALSE, echo = TRUE, eval = TRUE, warning=TRUE-------
-mc_init2 <- c(0.9, 0.05, 0.03, 0.02)
+## ----code_MHMM, cache=FALSE, echo = TRUE, eval = FALSE, warning=TRUE------
+#  mc_init2 <- c(0.9, 0.05, 0.03, 0.02)
+#  
+#  mc_trans2 <- matrix(c(0.85, 0.05, 0.05, 0.05, 0, 0.90, 0.05, 0.05, 0, 0,
+#    0.95, 0.05, 0, 0, 0, 1), nrow = 4, ncol = 4, byrow = TRUE)
+#  
+#  mc_emiss_marr2 <- matrix(c(0.90, 0.05, 0.05, 0.90, 0.05, 0.05, 0.05,
+#    0.85, 0.10, 0.05, 0.80, 0.15), nrow = 4, ncol = 3, byrow = TRUE)
+#  
+#  mc_emiss_child2 <- matrix(c(0.9, 0.1, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
+#    nrow = 4, ncol = 2, byrow = TRUE)
+#  
+#  mc_emiss_left2 <- matrix(c(0.9, 0.1, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
+#    nrow = 4, ncol = 2, byrow = TRUE)
+#  
+#  mhmm_init <- list(mc_init, mc_init2)
+#  
+#  mhmm_trans <- list(mc_trans, mc_trans2)
+#  
+#  mhmm_emiss <- list(list(mc_emiss_marr, mc_emiss_child, mc_emiss_left),
+#    list(mc_emiss_marr2, mc_emiss_child2, mc_emiss_left2))
+#  
+#  biofam3c$covariates$cohort <- cut(biofam3c$covariates$birthyr,
+#    c(1908, 1935, 1945, 1957))
+#  biofam3c$covariates$cohort <- factor(biofam3c$covariates$cohort,
+#    labels=c("1909-1935", "1936-1945", "1946-1957"))
+#  
+#  init_mhmm <- build_mhmm(observations = mc_obs, initial_probs = mhmm_init,
+#    transition_probs = mhmm_trans, emission_probs = mhmm_emiss,
+#    formula = ~sex + cohort, data = biofam3c$covariates,
+#    channel_names = c("Marriage", "Parenthood", "Residence"),
+#    cluster_names = c("Cluster 1", "Cluster 2"))
+#  
+#  # vignette: less restarts and no parallelization
+#  set.seed(1011)
+#  mhmm_fit <- fit_model(init_mhmm, local_step = TRUE, threads = 2,
+#    control_em = list(restart = list(times = 10)))
+#  mhmm <- mhmm_fit$model
 
-mc_trans2 <- matrix(c(0.85, 0.05, 0.05, 0.05, 0, 0.90, 0.05, 0.05, 0, 0, 
-  0.95, 0.05, 0, 0, 0, 1), nrow = 4, ncol = 4, byrow = TRUE)
-
-mc_emiss_marr2 <- matrix(c(0.90, 0.05, 0.05, 0.90, 0.05, 0.05, 0.05, 
-  0.85, 0.10, 0.05, 0.80, 0.15), nrow = 4, ncol = 3, byrow = TRUE)
-
-mc_emiss_child2 <- matrix(c(0.9, 0.1, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
-  nrow = 4, ncol = 2, byrow = TRUE)
-
-mc_emiss_left2 <- matrix(c(0.9, 0.1, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5),
-  nrow = 4, ncol = 2, byrow = TRUE)
-
-mhmm_init <- list(mc_init, mc_init2)
-
-mhmm_trans <- list(mc_trans, mc_trans2)
-
-mhmm_emiss <- list(list(mc_emiss_marr, mc_emiss_child, mc_emiss_left), 
-  list(mc_emiss_marr2, mc_emiss_child2, mc_emiss_left2))
-
-biofam3c$covariates$cohort <- cut(biofam3c$covariates$birthyr, 
-  c(1908, 1935, 1945, 1957))
-biofam3c$covariates$cohort <- factor(biofam3c$covariates$cohort, 
-  labels=c("1909-1935", "1936-1945", "1946-1957"))
-
-init_mhmm <- build_mhmm(observations = mc_obs, initial_probs = mhmm_init, 
-  transition_probs = mhmm_trans, emission_probs = mhmm_emiss, 
-  formula = ~sex + cohort, data = biofam3c$covariates, 
-  channel_names = c("Marriage", "Parenthood", "Residence"), 
-  cluster_names = c("Cluster 1", "Cluster 2"))
-
-# vignette: less restarts and no parallelization
-set.seed(1011)
-mhmm_fit <- fit_model(init_mhmm, local_step = TRUE, threads = 1,
-  control_em = list(restart = list(times = 10)))
-mhmm <- mhmm_fit$model
+## ----load_mhmm, cache=FALSE, echo=FALSE-----------------------------------
+mhmm <- readRDS("mhmm.rds")
 
 ## ----code_summaryMHMM, cache=FALSE----------------------------------------
 summary(mhmm, conditional_se = FALSE)
