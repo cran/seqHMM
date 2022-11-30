@@ -286,7 +286,7 @@ plot.hmm  <- function(x, layout = "horizontal", pie = TRUE,
 
   # Convert multichannel models to single-channel
   if (x$n_channels > 1) {
-    x  <- mc_to_sc(x)
+    x  <- mc_to_sc(x, cpal = cpal)
   }
 
   # No slices -> no legends needed
@@ -397,20 +397,28 @@ plot.hmm  <- function(x, layout = "horizontal", pie = TRUE,
 
 
   # Colors for the (combinations of) observed states
-  if (length(cpal) == 1 && cpal == "auto") {
+  if (identical(cpal, "auto")) {
     pie.colors  <- attr(x$observations, "cpal")
   } else if(length(cpal) != ncol(x$emiss)) {
-    warning("The length of the vector provided for argument cpal does not match the number of observed states. Automatic color palette was used.")
-    pie.colors  <- attr(x$observations, "cpal")
+    if(ncol(x$emiss) <= 200) {
+      warning("The length of the vector provided for argument cpal does not match the number of observed states. Automatic color palette was used.")
+      pie.colors  <- attr(x$observations, "cpal")
+    } else {
+      stop("Not enough colours in the colour palette. Argument 'cpal' should be of length ", 
+           ncol(x$emiss), " (number of observed states).")
+    }
   } else if(!all(isColor(cpal))) {
-    stop(paste("Please provide a vector of colors for argument cpal or use value \"auto\" for automatic color palette."))
+    stop("Please provide a vector of colors for argument cpal or use value \"auto\" for automatic color palette.")
   } else {
     pie.colors  <- cpal
   }
   if (with.legend != FALSE) {
     pie.colors.l  <- pie.colors
   }
-
+  if (length(pie.colors) != ncol(x$emiss)) {
+    stop("Not enough colours in the default colour palette. Argument 'cpal' should be of length ", 
+         ncol(x$emiss), " (number of observed states).")
+  }
   # Legend position and number of columns
   if (with.legend != FALSE && pie == TRUE) {
     # Own labels in legend
@@ -427,14 +435,14 @@ plot.hmm  <- function(x, layout = "horizontal", pie = TRUE,
         }
         ltext.orig <- ltext
         # Default cpal
-        if (length(cpal) == 1 && cpal == "auto") {
+        if (identical(cpal, "auto")) {
           # Default cpal.legend is the same as default cpal
-          if (length(cpal.legend) == 1 && cpal.legend == "auto") {
+          if (identical(cpal.legend, "auto")) {
           cpal.legend <- attr(x$observations, "cpal")
           }
         # If cpal set
         } else {
-          if (length(cpal.legend) == 1 && cpal.legend == "auto") {
+          if (identical(cpal.legend, "auto")) {
             cpal.legend <- cpal
           }
         }
@@ -442,9 +450,9 @@ plot.hmm  <- function(x, layout = "horizontal", pie = TRUE,
       # Default labels
     } else {
       ltext <- ltext.orig <- x$symbol_names
-      if (length(cpal) == 1 && cpal == "auto") {
+      if (identical(cpal, "auto")) {
         # Default cpal.legend is the same as default cpal
-        if(length(cpal.legend) == 1 && cpal.legend == "auto") {
+        if(identical(cpal.legend, "auto")) {
           cpal.legend <- attr(x$observations, "cpal")
         }
         # If cpal set

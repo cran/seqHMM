@@ -57,7 +57,7 @@ HMMplot <- function(x, layout = "horizontal", pie = TRUE,
 
   # Convert multichannel models to single-channel
   if (x$n_channels > 1) {
-    x <- mc_to_sc(x)
+    x <- mc_to_sc(x, cpal = cpal)
   }
 
   # No slices -> no legends needed
@@ -168,7 +168,7 @@ HMMplot <- function(x, layout = "horizontal", pie = TRUE,
 
 
   # Colors for the (combinations of) observed states
-  if (length(cpal) == 1 && cpal == "auto") {
+  if (identical(cpal, "auto")) {
     pie.colors <- attr(x$observations, "cpal")
   } else if(length(cpal) != ncol(x$emiss)) {
     warning("The length of the vector provided for argument cpal does not match the number of observed states. Automatic color palette was used.")
