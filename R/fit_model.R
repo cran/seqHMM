@@ -156,7 +156,9 @@
 #'   (local or global) is available, and currently the gradients are computed numerically 
 #'   (if needed) in these cases. 
 #'   
-#'   
+#'   In a case where the is no transitions from one state to anywhere (even to 
+#'   itself), the state is defined as absorbing in a way that probability of 
+#'   staying in this state is fixed to 1. See also `build_mm` function.   
 #'   
 #' @references Helske S. and Helske J. (2019). Mixture Hidden Markov Models for Sequence Data: The seqHMM Package in R,
 #' Journal of Statistical Software, 88(3), 1-32. doi:10.18637/jss.v088.i03
@@ -953,6 +955,8 @@ fit_model <- function(model, em_step = TRUE, global_step = FALSE, local_step = F
       if(npTM>0){
         model$transition_probs[maxTM]<-maxTMvalue
         model$transition_probs[paramTM]<-exp(pars[1:npTM])
+        zeros <- which(rowSums(model$transition_probs) == 0)
+        diag(model$transition_probs)[zeros] <- 1
         if (is.null(fixed_transitions)) {
           model$transition_probs[]<- 
             model$transition_probs / rowSums(model$transition_probs)
@@ -967,6 +971,7 @@ fit_model <- function(model, em_step = TRUE, global_step = FALSE, local_step = F
             }
           }
         }
+
       }
       if(sum(npEM)>0){
         if(is.null(constraints)) {
@@ -1081,6 +1086,8 @@ fit_model <- function(model, em_step = TRUE, global_step = FALSE, local_step = F
       if(npTM>0){
         model$transition_probs[] <- original_trans
         model$transition_probs[paramTM] <- exp(pars[1:npTM])
+        zeros <- which(rowSums(model$transition_probs) == 0)
+        diag(model$transition_probs)[zeros] <- 1
         if (is.null(fixed_transitions)) {
           model$transition_probs[]<- 
             model$transition_probs / rowSums(model$transition_probs)
@@ -1095,6 +1102,7 @@ fit_model <- function(model, em_step = TRUE, global_step = FALSE, local_step = F
             }
           }
         }
+
       }
       
       if(sum(npEM)>0){
