@@ -1,3 +1,16 @@
+seqHMM 1.2.5 (Release date: 2023-05-30)
+==============
+  * New methods `state_names` and `cluster_names` for getting and setting state 
+    and cluster names of the model objects.
+  * Fixed a bug in `mssplot` which caused error with `respect_void = TRUE`.
+  * Fixed a bug in `simulate_mhmm` which resulted NA colnames in the simulated 
+    `stslist` objects.
+  * Modified internals of `ssp` to be compatible with the latest versions of 
+    TraMineR.
+  * The `data` argument is no longer optional if `formula` is used in 
+    `build_mhmm`, `build_mmm` and `build_lcm` functions.
+  * Added few unit tests using testthat.
+
 seqHMM 1.2.4 (Release date: 2023-01-09)
 ==============
  * Fixed the issue with the initial transition matrix construction in build_mm 
