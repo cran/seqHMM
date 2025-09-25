@@ -89,7 +89,7 @@ c_{i(t+1)} &= 1 / \sum_{s=1}^S \alpha_{i(t+1)}(s),\\
 \end{equation*}
   \item Termination: Compute the log-likelihood \\
   \begin{equation*}
-\textrm{log} P(Y_i|\mathcal{M})= -\sum_{t=1}^T c_{it}
+\textrm{log} P(Y_i|\mathcal{M})= -\sum_{t=1}^T \log(c_{it})
 \end{equation*}
   \end{enumerate}
 
@@ -140,7 +140,7 @@ $\hat{z}_{iT}=\operatorname*{arg\,max}_{s=1,\ldots,S}(\delta_{iT}(s))$
   \item Sequence backtracking \\
 $\hat{z}_{it}=\psi_{i(t+1)}(\hat{s}_{i(t+1)}), t=T-1,\ldots,1$.
 \end{enumerate}
-To avoid numerical underflow due to multiplying many small probabilities, the Viterbi algorithm can be straighforwardly computed in log space, i.e., calculating $\log (\delta_{it}(s))$.
+To avoid numerical underflow due to multiplying many small probabilities, the Viterbi algorithm can be straightforwardly computed in log space, i.e., calculating $\log (\delta_{it}(s))$.
 
 \section{Gradients}
 

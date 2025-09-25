@@ -22,6 +22,7 @@ estimate_nhmm(
   bound = Inf,
   control_restart = list(),
   control_mstep = list(),
+  check_rank = NULL,
   ...
 )
 }
@@ -92,6 +93,13 @@ Default is \verb{Inf´, i.e., no bounds. Note that he bounds are not enforced  f
 
 \item{control_mstep}{Controls for M-step of EM algorithm, see details.}
 
+\item{check_rank}{If \code{TRUE}, the rank of the design matrices are
+checked for identifiability issues. Default is \code{NULL}, in which case checks
+are performed only if the number of sequences is 1000 or less, as the QR
+decomposition quickly becomes computationally demanding. If check is not
+performed, a warning is given, which can be circumvented by explicitly
+using \code{check_rank = FALSE}.}
+
 \item{...}{Additional arguments to \code{\link[nloptr:nloptr]{nloptr::nloptr()}} and EM algorithm.
 See details.}
 }
@@ -112,7 +120,7 @@ probabilities at the first time point need special attention. By default,
 the model is initialized with fixed values for the first time point
 (\code{prior_obs = "fixed"}), meaning that if the input data consists of
 time points \eqn{t=1, 2, \ldots}, then the model is defined from \eqn{t=2}
-onwards and the data on \eqn{t=1} is used only for defining the emission
+onward and the data on \eqn{t=1} is used only for defining the emission
 probabilities at \eqn{t=2}. Note that in this case also the initial state
 probabilities correspond to \eqn{t=2}.
 

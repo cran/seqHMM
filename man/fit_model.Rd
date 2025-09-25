@@ -16,7 +16,7 @@ fit_model(
   lb,
   ub,
   threads = 1,
-  log_space = TRUE,
+  log_space = FALSE,
   constraints = NULL,
   fixed_inits = NULL,
   fixed_emissions = NULL,
@@ -110,7 +110,7 @@ is \code{1}.}
 
 \item{log_space}{Make computations using log-space instead of scaling for
 greater numerical stability at a cost of decreased computational performance.
-The default is \code{TRUE}.}
+The default is \code{FALSE} (but was \code{TRUE} in 2.0.0 version of the package).}
 
 \item{constraints}{Integer vector defining equality constraints for emission
 distributions. Not supported for EM algorithm. See details.}
@@ -149,7 +149,7 @@ the \code{n_optimum} best models after the EM step (\code{best_opt_restart}).
 }
 \description{
 Function \code{fit_model} estimates the parameters of mixture hidden
-Markov models and its restricted variants using maximimum likelihood.
+Markov models and its restricted variants using maximum likelihood.
 Initial values for estimation are taken from the corresponding components
 of the model with preservation of original zero probabilities.
 }
@@ -179,7 +179,7 @@ a local optimization (L-BFGS by default) is run with a lower tolerance to find t
 optimum with high precision.
 
 There are some theoretical guarantees that the MLSL method used as the default
-optimizer in step 2 shoud find all local optima in a finite number of local
+optimizer in step 2 should find all local optima in a finite number of local
 optimizations. Of course, it might not always succeed in a reasonable time.
 The EM algorithm can help in finding good boundaries for the search, especially
 with good starting values, but in some cases it can mislead. A good strategy is to

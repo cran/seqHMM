@@ -26,9 +26,11 @@
 #' @import Rcpp
 #' @importFrom Rcpp loadModule evalCpp
 #' @importFrom stats logLik vcov predict update coef nobs
+#' @importFrom utils head modifyList
 #' @importFrom TraMineR seqlegend
 #' @importFrom graphics par plot.new
 #' @importFrom ggplot2 ggplot aes geom_pointrange geom_ribbon geom_line facet_wrap
+#' @importFrom collapse fndistinct seq_row rsplit qM
 #' @import data.table
 #' @references Helske S. and Helske J. (2019). Mixture Hidden Markov Models for Sequence Data: The seqHMM Package in R,
 #' Journal of Statistical Software, 88(3), 1-32. doi:10.18637/jss.v088.i03

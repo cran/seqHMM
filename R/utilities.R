@@ -238,22 +238,14 @@ intercept_only <- function(f) {
 #' 
 #' @noRd
 create_obs <- function(model) {
-  lapply(
-    split(model$data, by = model$id_variable),
-    \(d) {
-      matrix(
-        unlist(lapply(
-          model$responses,
-          \(y) {
-            obs <- as.integer(d[[y]]) - 1L
-            obs[is.na(obs)] <- model$n_symbols[y]
-            obs
-          }
-        )),
-        nrow = model$n_channels, byrow = TRUE
-      )
-    }
-  )
+  # avoid CRAN check warnings due to NSE
+  cols <- NULL
+  id <- model$data[[model$id_variable]]
+  obs <- qM(model$data[, cols, env = list(cols = I(model$responses))]) - 1L
+  for (i in seq_len(ncol(obs))) {
+    obs[is.na(obs[, i]), i] <- model$n_symbols[i]
+  }
+  lapply(rsplit(obs, fl = id), \(y) t(y))
 }
 #' Create obsArray for various pre-2.0.0 C++ functions
 #' 

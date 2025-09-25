@@ -1,3 +1,37 @@
+seqHMM 2.1.0
+==============
+
+  * Identifiability check via QR decomposition for the design matrices can now 
+  be controlled via argument `check_rank`. Default is `NULL`, which will 
+  evaluate as `TRUE` if the number of sequences is at most 1000. Also, even if 
+  checks are done, they now use precomputed QR instead of doing it again.
+  * Added dependency on package `collapse`, which resulted in much more 
+  efficient construction of non-homogeneous HMM objects.
+  * Removed `data.table` progress printing from internal functions. Because of 
+  this recent feature, `data.table` version requirement is increased.
+  * Fixed an issue with dropping the first time point in case where this lead 
+  to an unused factor level and subsequent error about multicollinearity.
+  * Fixed the error messages regarding the missing values in covariates.
+  * Fixed a typo in `simulate_nhmm` which caused an error in accessing 
+  elements of initial values.
+  * Fixed the bug in `simulate_nhmm` and `simulate_mnhmm` which caused the 
+  covariate matrices of the returned model to be incorrect. This had no effect 
+  on the simulated observations and states though.
+  * Unused factor levels are now not dropped in the simulation functions, 
+  whereas whether to drop them in estimation functions can be controlled via 
+  argument `drop_levels` (which is `TRUE` by default).
+  * Fixed the column name from `state_to` to `state` in the marginal state 
+  predictions output of `predict()`.
+  * Fixed the check for valid `ids` argument in `stacked_sequence_plot`.
+  * Fixed the usage of the `group` argument in `stacked_sequence_plot`.
+  * Reverted the default argument `log_space` of `fit_model` 
+    and other relevant functions back to `FALSE`, as was the case before 
+    package version 2.0.0. Algorithms of NHMM models also now use scaling 
+    instead of log-space computations for improved speed.
+  * Improved numerical stability and computational efficiency of several 
+    C++ functions related to non-homogenous models. 
+  * Resaved the `leaves` data as normal `data.frame` (instead of `tibble`).
+  
 seqHMM 2.0.0
 ==============
   * Added support for non-homogeneous HMMs (NHMMs) where initial, transition, 
@@ -187,7 +221,7 @@ seqHMM 1.0.6 (Release date: 2016-08-01)
   left_right = FALSE.
 * Adjusted reltol and maxeval values for EM algorithm. Now reltol is 1e-10
   (previously 1e-12), and the reltol and maxeval values for restarts are by
-  default taken from the initial EM algorithm (previosly reltol was 1e-8 and
+  default taken from the initial EM algorithm (previously reltol was 1e-8 and
   maxeval = 100 for restarts).
 * Fixed hidden states labels for ssp functions (previously always used the 
   default values).
@@ -200,7 +234,7 @@ Bug fixes:
 * Changing the missing.color argument did not work in legends of ssp, ssplot, and
   mssplot.
 * The mssplot function now works with unique hidden state names (problem
-  occured e.g. with latent class models).
+  occurred e.g. with latent class models).
 * The mssplot function with sortv = "mds.hidden" produced strange errors when
   plotting clusters with one hidden state. Now automatically uses "mds.obs" in
   such cases.

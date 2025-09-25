@@ -1,7 +1,7 @@
 Package: seqHMM
 Title: Mixture Hidden Markov Models for Social Sequence Data and Other
         Multivariate, Multichannel Categorical Time Series
-Version: 2.0.0
+Version: 2.1.0
 Authors@R: 
     c(person(given = "Jouni",
            family = "Helske",
@@ -31,11 +31,11 @@ Description: Designed for estimating variants of hidden (latent) Markov models
 LazyData: true
 LinkingTo: nloptr, Rcpp (>= 0.12.0), RcppArmadillo
 Depends: R (>= 4.1.0)
-Imports: checkmate, cli, data.table, future.apply, ggplot2, ggseqplot,
-        graphics, grDevices, grid, gridBase, igraph, lhs, Matrix,
-        methods, nloptr, numDeriv, patchwork, progressr, Rcpp (>=
-        0.12.0), RcppHungarian, rlang, stats, TraMineR (>= 2.2-7),
-        utils
+Imports: checkmate, cli, collapse, data.table (>= 1.16.0),
+        future.apply, ggplot2, ggseqplot, graphics, grDevices, grid,
+        gridBase, igraph, lhs, Matrix, methods, nloptr, numDeriv,
+        patchwork, progressr, Rcpp (>= 0.12.0), RcppHungarian, rlang,
+        stats, TraMineR (>= 2.2-7), utils
 Suggests: covr, knitr, MASS, nnet, testthat (>= 3.0.0),
 License: GPL (>= 2)
 Encoding: UTF-8
@@ -46,10 +46,10 @@ Config/testthat/edition: 3
 SystemRequirements: GNU make
 Biarch: true
 NeedsCompilation: yes
-Packaged: 2025-05-16 11:54:34 UTC; jvhels
+Packaged: 2025-09-24 19:31:00 UTC; jvhels
 Author: Jouni Helske [aut, cre] (ORCID:
     <https://orcid.org/0000-0001-7130-793X>),
   Satu Helske [aut] (ORCID: <https://orcid.org/0000-0003-0532-0153>)
 Maintainer: Jouni Helske <jouni.helske@iki.fi>
 Repository: CRAN
-Date/Publication: 2025-05-17 00:10:02 UTC
+Date/Publication: 2025-09-25 05:10:03 UTC
