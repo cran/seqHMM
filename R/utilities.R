@@ -112,6 +112,7 @@ split_mnhmm <- function(x) {
   models
 }
 
+# Intercept-only formula?
 io <- function(X) {
   out <- attr(X, "icpt_only")
   if (is.null(out)) { 
@@ -119,6 +120,7 @@ io <- function(X) {
   }
   out
 }
+# covariates vary by id?
 iv <- function(X) {
   out <- attr(X, "iv")
   if (is.null(out)) { 
@@ -126,6 +128,7 @@ iv <- function(X) {
   }
   out
 }
+# covariates vary by time?
 tv <- function(X) {
   out <- attr(X, "tv")
   if (is.null(out)) { 
@@ -242,7 +245,7 @@ create_obs <- function(model) {
   cols <- NULL
   id <- model$data[[model$id_variable]]
   obs <- qM(model$data[, cols, env = list(cols = I(model$responses))]) - 1L
-  for (i in seq_len(ncol(obs))) {
+  for (i in seq_col(obs)) {
     obs[is.na(obs[, i]), i] <- model$n_symbols[i]
   }
   lapply(rsplit(obs, fl = id), \(y) t(y))

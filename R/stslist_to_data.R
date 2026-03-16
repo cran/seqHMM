@@ -15,6 +15,21 @@
 #' @param ... Ignored
 #' @rdname data_to_stslist
 #' @export
+#' @examples
+#' # Convert multichannel stslist to long format data.table
+#' biofam_seqs <- mhmm_biofam$observations # list of three stslist objects
+#' d <- stslist_to_data(
+#'   biofam_seqs, id = "Individual", time = "Age",
+#'   responses = c("Marriage", "Children", "Residence")
+#' )
+#' head(d)
+#' 
+#' # Convert back to stslist
+#' biofam_seqs2 <- data_to_stslist(
+#'   d, id = "Individual", time = "Age", 
+#'   responses = c("Marriage", "Children", "Residence")
+#' )
+#' all.equal(biofam_seqs, biofam_seqs2, check.attributes = FALSE)
 data_to_stslist <- function(x, id, time, responses, seqdef_args = NULL, ...) {
   
   stopifnot_(
@@ -31,12 +46,18 @@ data_to_stslist <- function(x, id, time, responses, seqdef_args = NULL, ...) {
     responses <- x$responses
     x <- x$data[, c(x$id_variable, x$time_variable)]
   } else {
+    stopifnot_(
+      checkmate::test_data_frame(x),
+      "Argument {.arg x} should be an object of class {.cls data.frame}, 
+      {.cls nhmm}, or {.cls mnhmm}."
+    )
     cols <- c(id, time, responses)
     x <- as.data.table(x)
     x[, (responses) := lapply(.SD, as.factor), .SDcols = responses]
     x <- .check_data(x, id, time, responses)[, cols, env = list(cols = I(cols))]
     x <- fill_time(x, id, time)
   }
+  setdroplevels(x)
   sequences <- vector("list", length(responses))
   names(sequences) <- responses
   colnames(x)[1:2] <- c("id", "time")
@@ -46,7 +67,7 @@ data_to_stslist <- function(x, id, time, responses, seqdef_args = NULL, ...) {
       seqdef_args <- stats::setNames(list(seqdef_args), responses)
     }
     stopifnot_(
-      is_list_of_lists(seqdef_args, C) && responses %in% names(seqdef_args),
+      is_list_of_lists(seqdef_args, C) && all(responses %in% names(seqdef_args)),
       "Argument {.arg seqdef_args} should a list of lists of length {C}, with 
       list element names matching the values in {.arg responses}.",
       i = "In case of a single response, a non-nested list is also supported."
@@ -71,7 +92,7 @@ data_to_stslist <- function(x, id, time, responses, seqdef_args = NULL, ...) {
 }
 #' @rdname data_to_stslist
 #' @export
-stslist_to_data <- function(x, id, time, responses, ...) {
+stslist_to_data <- function(x, id = "id", time = "time", responses, ...) {
   stopifnot_(
     !missing(responses) && checkmate::test_character(x = responses) || 
       checkmate::test_factor(responses), 
@@ -112,7 +133,7 @@ stslist_to_data <- function(x, id, time, responses, ...) {
           "numeric. Replacing them with integers."
         )
       )
-      timenames <- seq_len(ncol(x[[1]]))
+      timenames <- seq_col(x[[1]])
     }
   }
   stopifnot_(

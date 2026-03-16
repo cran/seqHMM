@@ -79,7 +79,7 @@ get_marginals <- function(model, probs = NULL, condition = NULL,
                           weighting = c("posterior", "forward", "none")) {
   
   # avoid CRAN check warnings due to NSE
-  time <- probability <- NULL
+  time <- probability <- log_alpha <- NULL
   stopifnot_(
     inherits(model, c("nhmm", "mnhmm")),
     "Argument {.arg model} must be an object of class {.cls nhmm} or {.cls mnhmm}."
@@ -106,6 +106,9 @@ get_marginals <- function(model, probs = NULL, condition = NULL,
       )
     }
   }
+  id <- model$id_variable
+  time <- model$time_variable
+  S <- model$n_states
   if (!is.null(newdata)) {
     model <- update(model, newdata)
   }
@@ -114,10 +117,18 @@ get_marginals <- function(model, probs = NULL, condition = NULL,
   }
   if (weighting == "forward") {
     pp <- forward_backward(model, forward_only = TRUE)
-    setnames(pp, "log_alpha", "probability")
+    pp[, probability := exp(log_alpha - max(log_alpha)), by = list(id, time), 
+       env = list(id = id, time = time)]
+    pp[, probability := probability / sum(probability), by = list(id, time), 
+       env = list(id = id, time = time)]
+    pp[, log_alpha := NULL]
   }
   if (weighting == "none") {
-    pp[, probability := 1L]
+    pp <- model$data[rep(seq_row(model$data), each = S), 
+                     list(id, time), 
+                     env = list(id = id, time = time, S = S)]
+    set(pp, j = "state", value = rep_len(model$state_names, nrow(pp)))
+    set(pp, j = "probability", value = 1 / S)
   }
   id_time <- c(model$id_variable, model$time_variable)
   out_state <- out_A <- out_obs <- out_B <- NULL
@@ -151,13 +162,23 @@ get_marginals <- function(model, probs = NULL, condition = NULL,
       )
     )
     nsim <- length(model$boot$gamma_pi)
-    boot_state <- matrix(0, nrow(out_state), nsim * compute_z)
-    boot_A <- matrix(0, nrow(out_A), nsim * compute_A)
-    boot_obs <- vector("list", model$n_channels)
-    boot_B <- vector("list", model$n_channels)
-    for (i in seq_len(model$n_channels)) {
-      boot_B[[i]] <- matrix(0, nrow(out_B[[i]]), nsim * compute_B)
-      boot_obs[[i]] <- matrix(0, nrow(out_obs[[i]]), nsim * compute_y)
+    if (compute_z) {
+      boot_state <- matrix(0, nrow(out_state), nsim)
+    }
+    if (compute_A) {
+      boot_A <- matrix(0, nrow(out_A), nsim)
+    }
+    if (compute_B) {
+      boot_B <- vector("list", model$n_channels)
+      for (i in seq_len(model$n_channels)) {
+        boot_B[[i]] <- matrix(0, nrow(out_B[[i]]), nsim)
+      }
+    }
+    if (compute_y) {
+      boot_obs <- vector("list", model$n_channels)
+      for (i in seq_len(model$n_channels)) {
+        boot_obs[[i]] <- matrix(0, nrow(out_obs[[i]]), nsim * compute_y)
+      }
     }
     tQs <- t(create_Q(model$n_states))
     tQm <- lapply(model$n_symbols, \(i) t(create_Q(i)))
@@ -173,7 +194,11 @@ get_marginals <- function(model, probs = NULL, condition = NULL,
       }
       if (weighting == "forward") {
         pp <- forward_backward(model, forward_only = TRUE)
-        setnames(pp, "log_alpha", "probability")
+        pp[, probability := exp(log_alpha - max(log_alpha)), by = list(id, time), 
+           env = list(id = id, time = time)]
+        pp[, probability := probability / sum(probability), by = list(id, time), 
+           env = list(id = id, time = time)]
+        pp[, log_alpha := NULL]
       }
       if (compute_z) {
         boot_state[, i] <- compute_z_marginals(
@@ -222,5 +247,10 @@ get_marginals <- function(model, probs = NULL, condition = NULL,
       }
     }
   }
-  list(states = out_state, responses = out_obs, transitions = out_A, emissions = out_B)
+  list(
+    states = out_state, 
+    responses = out_obs, 
+    transitions = out_A,
+    emissions = out_B
+  )
 }

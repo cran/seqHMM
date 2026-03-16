@@ -11,10 +11,10 @@
 #' @param cluster_formula of class [formula()] for the mixture probabilities.
 #' @param inits If `inits = "random"` (default), random initial values are 
 #' used. Otherwise `inits` should be list of initial values. If coefficients 
-#' are given using list components `eta_pi`, `eta_A`, `eta_B`, 
+#' are given using list elements `eta_pi`, `eta_A`, `eta_B`, 
 #' and `eta_omega`, these are used as is, alternatively initial values 
 #' can be given in terms of the initial state, transition, emission, and mixture 
-#' probabilities using list components `initial_probs`, `emission_probs`, 
+#' probabilities using list elements `initial_probs`, `emission_probs`, 
 #' `transition_probs`, and `cluster_probs`. These can also be mixed, i.e. you 
 #' can give only `initial_probs` and `eta_A`.
 #' @param cluster_names A vector of optional labels for the clusters. If this
@@ -33,7 +33,7 @@
 #' fit <- estimate_mnhmm(n_states = 3, n_clusters = 2,
 #'   data = d, time = "time", id = "id", 
 #'   cluster_formula = ~ male + catholic + gcse5eq + Grammar + 
-#'     funemp + fmpr + livboth + Belfast +
+#'     funemp + fmpr + livboth +
 #'   N.Eastern + Southern + S.Eastern + Western,
 #'   emission_formula = activity ~ male + catholic + gcse5eq,
 #'   initial_formula = ~ 1, 
@@ -44,11 +44,18 @@ estimate_mnhmm <- function(
     n_states, n_clusters, emission_formula, initial_formula = ~1, 
     transition_formula = ~1, cluster_formula = ~1,
     data, time, id, lambda = 0, prior_obs = "fixed", state_names = NULL, 
-    cluster_names = NULL, inits = "random", init_sd = 2, restarts = 0L, 
+    cluster_names = NULL, inits = "random", init_sd = NULL, restarts = 0L, 
     method = "EM-DNM", bound = Inf, control_restart = list(), 
     control_mstep = list(), check_rank = NULL, ...) {
   
   call <- match.call()
+  if (is.null(init_sd)) {
+    if (!identical(inits, "random") && restarts == 0L) {
+      init_sd <- 0
+    } else {
+      init_sd <- 2
+    }
+  }
   model <- build_mnhmm(
     n_states, n_clusters, emission_formula, initial_formula, 
     transition_formula, cluster_formula, data, id, time, 

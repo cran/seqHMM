@@ -68,7 +68,7 @@ test_that("'posterior_probs' works for 'mnhmm'", {
         hmm_biofam$channel_names, \(y) stats::as.formula(paste0(y, " ~ 1"))
       ), 
       data = d, time = "time", id = "id", n_states = 2, n_clusters = 2,
-      maxeval = 2, method = "EM-DNM", check_rank = FALSE
+      maxeval = 2, method = "EM-DNM", check_rank = FALSE, lambda = 0.001
     ),
     NA
   )
@@ -80,7 +80,7 @@ test_that("'posterior_probs' works for 'mnhmm'", {
   expect_lte(max(out$probability), 1 + 1e-12)
   set.seed(1)
   expect_error(
-    fit <- estimate_nhmm(
+    fit <- estimate_mnhmm(
       Marriage ~ 1, 
       data = d, time = "time", id = "id", n_states = 3, n_clusters = 2,
       maxeval = 1, method = "EM", check_rank = FALSE

@@ -42,6 +42,7 @@
   }
   data <- data.table(data, key = c(id_var, time_var))
   data[, id_var := as_factor(id_var), env = list(id_var = id_var)]
+  setkeyv(data, c(id_var, time_var))
   data
 }
 
@@ -109,7 +110,7 @@
             "numeric. Replacing them with integers."
           )
         )
-        timenames <- seq_len(ncol(x[[1]]))
+        timenames <- seq_col(x[[1]])
       }
     }
     stopifnot_(
@@ -142,7 +143,7 @@
             "numeric. Replacing them with integers."
           )
         )
-        timenames <- seq_len(ncol(x))
+        timenames <- seq_col(x)
       }
     }
     stopifnot_(

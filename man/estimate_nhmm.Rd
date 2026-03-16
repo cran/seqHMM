@@ -16,7 +16,7 @@ estimate_nhmm(
   prior_obs = "fixed",
   state_names = NULL,
   inits = "random",
-  init_sd = 2,
+  init_sd = NULL,
   restarts = 0L,
   method = "EM-DNM",
   bound = Inf,
@@ -65,15 +65,15 @@ is \code{NULL} (the default), numbered states are used.}
 
 \item{inits}{If \code{inits = "random"} (default), random initial values are
 used. Otherwise \code{inits} should be list of initial values. If coefficients
-are given using list components \code{eta_pi}, \code{eta_A}, \code{eta_B},
+are given using list elements \code{eta_pi}, \code{eta_A}, \code{eta_B},
 these are used as is, alternatively initial values can be given in terms of
 the initial state, transition, and emission probabilities using list
-components \code{initial_probs}, \code{emission_probs}, and \code{transition_probs}. These
+elements \code{initial_probs}, \code{emission_probs}, and \code{transition_probs}. These
 can also be mixed, i.e. you can give only \code{initial_probs} and \code{eta_A}.}
 
 \item{init_sd}{Standard deviation of the normal distribution used to generate
-random initial values. Default is \code{2}. If you want to fix the initial values
-of the regression coefficients to zero, use \code{init_sd = 0}.}
+random initial values. If initial values are given and \code{restart = 0}, then
+by default \code{init_sd} is set to zero. Otherwise the default is \code{2}.}
 
 \item{restarts}{Number of times to run optimization using random starting
 values (in addition to the final run). Default is 0.}
@@ -87,7 +87,8 @@ then switches to L-BFGS (but other algorithms of NLopt can be used).}
 \item{bound}{Positive value defining the hard lower and upper bounds for the
 working parameters \eqn{\eta}, which are used to avoid extreme probabilities and
 corresponding numerical issues especially in the M-step of EM algorithm.
-Default is \verb{Inf´, i.e., no bounds. Note that he bounds are not enforced  for M-step in intercept-only case with }lambda = 0`.}
+Default is \code{Inf}, i.e., no bounds. Note that the bounds are not enforced
+for M-step in intercept-only case with \code{lambda = 0}.}
 
 \item{control_restart}{Controls for restart steps, see details.}
 
@@ -144,7 +145,10 @@ possible to parallelize these runs using the \code{future} package, e.g., by
 calling \code{future::plan(multisession, workers = 2)} before \code{estimate_nhmm()}.
 See \code{\link[future:plan]{future::plan()}} for details. This is compatible with \code{progressr}
 package, so you can use \code{\link[progressr:with_progress]{progressr::with_progress()}} to track the progress
-of these multiple runs.
+of these multiple runs. Using argument \code{save_all_solutions = TRUE} allows to
+save the optimization results of all restarts, which is mostly useful for
+debugging purposes or if you are interested in seeing how much the parameter
+estimates vary due to variation in initial values.
 
 During the estimation, the log-likelihood is scaled by the number of
 non-missing observations (\code{nobs(model)}), and the the covariate data is
@@ -156,7 +160,7 @@ is less than \code{1e-8} or the relative or absolute change of the working
 parameters eta is less than \code{1e-6}. These can be changed
 by passing arguments \code{ftol_rel}, \code{ftol_abs}, \code{xtol_rel}, and \code{xtol_abs}
 via \code{...}. These, as well as, \code{maxeval} (maximum number of iterations,
-1e4 by default), and \code{print_level} (default is \code{0}, no console output,
+1e5 by default), and \code{print_level} (default is \code{0}, no console output,
 larger values are more verbose), are used by the chosen main optimization
 method. The number of initial EM iterations in \code{EM-DNM} can be set using
 argument \code{maxeval_em_dnm} (default is 100), and algorithm for direct
@@ -171,6 +175,10 @@ Additionally, same options can be defined separately for the M-step of EM
 algorithm via list \code{control_mstep}. For \code{control_mstep}, the
 default values are \code{ftol_rel = 1e-10}, and \code{maxeval = 1000}, and otherwise
 identical to previous defaults above.
+
+By default, EM algorithm uses SQUAREM acceleration (Varadhan and Roland,
+2008) to improve the convergence speed near optimum. This can be turned of
+by using control argument \code{use_squarem = FALSE}.
 }
 \examples{
 data("mvad", package = "TraMineR")
@@ -189,8 +197,12 @@ fit <- estimate_nhmm(n_states = 3,
 }
 }
 \references{
-Helske, J (2025). Feedback-augmented Non-homogeneous Hidden Markov Models for
+Helske J (2025). Feedback-augmented Non-homogeneous Hidden Markov Models for
 Longitudinal Causal Inference. arXiv preprint. \url{doi:10.48550/arXiv.2503.16014}.
 
-Johnson, SG. The NLopt nonlinear-optimization package, http://github.com/stevengj/nlopt.
+Johnson SG. The NLopt nonlinear-optimization package, http://github.com/stevengj/nlopt.
+
+Varadhan R and Roland C (2008). Simple and Globally Convergent Methods for
+Accelerating the Convergence of Any EM Algorithm. Scandinavian Journal of
+Statistics, 35: 335-353. \url{doi:10.1111/j.1467-9469.2007.00585.x}
 }

@@ -36,7 +36,10 @@
 #' calling `future::plan(multisession, workers = 2)` before `estimate_nhmm()`.
 #' See [future::plan()] for details. This is compatible with `progressr` 
 #' package, so you can use [progressr::with_progress()] to track the progress 
-#' of these multiple runs.
+#' of these multiple runs. Using argument `save_all_solutions = TRUE` allows to 
+#' save the optimization results of all restarts, which is mostly useful for 
+#' debugging purposes or if you are interested in seeing how much the parameter 
+#' estimates vary due to variation in initial values.
 #' 
 #' During the estimation, the log-likelihood is scaled by the number of 
 #' non-missing observations (`nobs(model)`), and the the covariate data is 
@@ -48,7 +51,7 @@
 #' parameters eta is less than `1e-6`. These can be changed
 #' by passing arguments `ftol_rel`, `ftol_abs`, `xtol_rel`, and `xtol_abs` 
 #' via `...`. These, as well as, `maxeval` (maximum number of iterations, 
-#' 1e4 by default), and `print_level` (default is `0`, no console output, 
+#' 1e5 by default), and `print_level` (default is `0`, no console output, 
 #' larger values are more verbose), are used by the chosen main optimization 
 #' method. The number of initial EM iterations in `EM-DNM` can be set using 
 #' argument `maxeval_em_dnm` (default is 100), and algorithm for direct
@@ -64,11 +67,19 @@
 #' default values are `ftol_rel = 1e-10`, and `maxeval = 1000`, and otherwise 
 #' identical to previous defaults above.
 #' 
+#' By default, EM algorithm uses SQUAREM acceleration (Varadhan and Roland, 
+#' 2008) to improve the convergence speed near optimum. This can be turned of 
+#' by using control argument `use_squarem = FALSE`.
+#' 
 #' @references 
-#' Helske, J (2025). Feedback-augmented Non-homogeneous Hidden Markov Models for 
+#' Helske J (2025). Feedback-augmented Non-homogeneous Hidden Markov Models for 
 #' Longitudinal Causal Inference. arXiv preprint. <doi:10.48550/arXiv.2503.16014>.
 #' 
-#' Johnson, SG. The NLopt nonlinear-optimization package, http://github.com/stevengj/nlopt.
+#' Johnson SG. The NLopt nonlinear-optimization package, http://github.com/stevengj/nlopt.
+#' 
+#' Varadhan R and Roland C (2008). Simple and Globally Convergent Methods for 
+#' Accelerating the Convergence of Any EM Algorithm. Scandinavian Journal of 
+#' Statistics, 35: 335-353. <doi:10.1111/j.1467-9469.2007.00585.x>
 #' 
 #' @param n_states An integer > 1 defining the number of hidden states.
 #' @param initial_formula of class [formula()] for the
@@ -91,14 +102,14 @@
 #' is `NULL` (the default), numbered states are used.
 #' @param inits If `inits = "random"` (default), random initial values are 
 #' used. Otherwise `inits` should be list of initial values. If coefficients 
-#' are given using list components `eta_pi`, `eta_A`, `eta_B`, 
+#' are given using list elements `eta_pi`, `eta_A`, `eta_B`, 
 #' these are used as is, alternatively initial values can be given in terms of 
 #' the initial state, transition, and emission probabilities using list 
-#' components `initial_probs`, `emission_probs`, and `transition_probs`. These 
+#' elements `initial_probs`, `emission_probs`, and `transition_probs`. These 
 #' can also be mixed, i.e. you can give only `initial_probs` and `eta_A`.
 #' @param init_sd Standard deviation of the normal distribution used to generate
-#' random initial values. Default is `2`. If you want to fix the initial values 
-#' of the regression coefficients to zero, use `init_sd = 0`.
+#' random initial values. If initial values are given and `restart = 0`, then 
+#' by default `init_sd` is set to zero. Otherwise the default is `2`.
 #' @param restarts Number of times to run optimization using random starting 
 #' values (in addition to the final run). Default is 0.
 #' @param lambda Penalization factor `lambda` for penalized log-likelihood, where the 
@@ -116,7 +127,7 @@
 #' @param bound Positive value defining the hard lower and upper bounds for the 
 #' working parameters \eqn{\eta}, which are used to avoid extreme probabilities and 
 #' corresponding numerical issues especially in the M-step of EM algorithm. 
-#' Default is `Inf´, i.e., no bounds. Note that he bounds are not enforced 
+#' Default is `Inf`, i.e., no bounds. Note that the bounds are not enforced 
 #' for M-step in intercept-only case with `lambda = 0`.
 #' @param control_restart Controls for restart steps, see details.
 #' @param control_mstep Controls for M-step of EM algorithm, see details.
@@ -149,11 +160,18 @@ estimate_nhmm <- function(
     n_states, emission_formula, initial_formula = ~1, 
     transition_formula = ~1, 
     data, time, id, lambda = 0, prior_obs = "fixed", state_names = NULL, 
-    inits = "random", init_sd = 2, restarts = 0L, 
+    inits = "random", init_sd = NULL, restarts = 0L, 
     method = "EM-DNM", bound = Inf, control_restart = list(), 
     control_mstep = list(), check_rank = NULL, ...) {
   
   call <- match.call()
+  if (is.null(init_sd)) {
+    if (!identical(inits, "random") && restarts == 0L) {
+      init_sd <- 0
+    } else {
+      init_sd <- 2
+    }
+  }
   model <- build_nhmm(
     n_states, emission_formula, initial_formula, transition_formula, 
     data, id, time, state_names, scale = TRUE, prior_obs, 

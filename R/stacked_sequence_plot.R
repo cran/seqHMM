@@ -8,10 +8,11 @@
 #' @param x Either a hidden Markov model object of class `hmm`, `mhmm`, `nhmm`, 
 #' or `mnhmm`, a sequence object of class `stslist` (created with the 
 #' [TraMineR::seqdef()] function) or a list of `stslist` objects.
-#' @param plots What to plot. One of `"obs"` for observations (the default),
-#' `"hidden_paths"` for most probable paths of hidden states,
-#' or `"both"` for observations and hidden paths together. Latter two options 
-#' are only possible for model objects.
+#' @param plots What to plot. One of `"observations"` for observations 
+#' (the default), `"hidden states"` (or `"hidden_paths"`, for the 
+#' backward compatibility) for most probable paths of hidden states, or 
+#' `"both"` for observations and hidden paths together. Latter two options are 
+#' only possible for cases whe `x` is a hidden Markov model.
 #' @param type The type of the plot. Available types are `"index"` for sequence 
 #' index plots and `"distribution"` for state distribution plots (the default). 
 #' See [ggseqplot::ggseqiplot()] and [ggseqplot::ggseqdplot()] for details.
@@ -56,18 +57,20 @@
 #' p & theme(plot.margin = unit(c(1, 1, 0, 2), "mm"))
 #' 
 stacked_sequence_plot <- function(
-    x, plots = "obs", type = "distribution", ids,
+    x, plots = "observations", type = "distribution", ids,
     sort_by = "none", sort_channel, dist_method = "OM", group = NULL, 
     legend_position = "right", ...) {
   
   plots <- try(
-    match.arg(plots, c("obs", "hidden_paths", "both")), 
+    match.arg(plots, c("observations", "hidden states","hidden_paths", "both")), 
     silent = TRUE
   )
+  if (plots == "hidden_paths") plots <- "hidden states"
+  
   stopifnot_(
     !inherits(plots, "try-error"),
-    "Argument {.arg plots} must be {.val obs},
-    {.val hidden_paths}, or {.val both}."
+    "Argument {.arg plots} must be {.val observations},
+    {.val hidden states}, or {.val both}."
   )
   type <- try(match.arg(type, c("distribution", "index")), silent = TRUE)
   stopifnot_(
@@ -87,7 +90,7 @@ stacked_sequence_plot <- function(
         data_to_stslist(hp, colnames(hp)[1], colnames(hp)[2], "state")
       )
     } else {
-      if (plots != "obs") {
+      if (plots != "observations") {
         hp <- hidden_paths(x, as_stslist = TRUE)
       }
     }
@@ -108,12 +111,12 @@ stacked_sequence_plot <- function(
       }
       n_channels <- x$n_channels + 1
     }
-    if (plots == "hidden_paths") {
+    if (plots == "hidden states") {
       y <- hp
       channel_names <- "Hidden states"
       n_channels <- 1
     }
-    if (plots == "obs") {
+    if (plots == "observations") {
       if (inherits(x, c("nhmm", "mnhmm"))) {
         y <- suppressMessages(
           data_to_stslist(x$data, x$id_variable, x$time_variable, x$responses)
@@ -127,7 +130,7 @@ stacked_sequence_plot <- function(
     }
   } else {
     stopifnot_(
-      plots == "obs",
+      plots == "observations",
       "Cannot draw most probable hidden paths as {.arg x} is not a model object."
     )
     y <- x
@@ -163,18 +166,13 @@ stacked_sequence_plot <- function(
     }
   }
   if (missing(sort_channel)) sort_channel <- channel_names[1]
+  x_msg <- cli::cli_vec(channel_names, style = list('vec-last' = ' or '))
   stopifnot_(
     sort_channel %in% channel_names || sort_channel %in% seq_len(n_channels),
-    paste0("{.arg sort_channel} should be either ",
-           "{cli::cli_vec(channel_names, style = list('vec-last' = ' or '))}, ",
-           "or integer between 1 and {n_channels}."
-    )
+    "{.arg sort_channel} should be either {.val {x_msg}}, 
+    or integer between 1 and {n_channels}."
   )
   if (n_channels > 1) names(y) <- channel_names
-  if (type == "index" & length(sort_by) == 1) {
-    y <- sort_sequences(y, sort_by, sort_channel, dist_method)
-    sort_by <- NULL
-  }
   if (identical(group, NA)) group <- NULL
   if (!is.null(group)) {
     stopifnot_(
@@ -183,6 +181,13 @@ stacked_sequence_plot <- function(
     )
     if (!missing(ids)) {
       group <- group[ids]
+    }
+  }
+  if (type == "index" && length(sort_by) == 1) {
+    y <- sort_sequences(y, sort_by, sort_channel, dist_method)
+    sort_by <- NULL
+    if (!is.null(group)) {
+      group <- group[attr(y, "ordering")]
     }
   }
   if (n_channels == 1) {

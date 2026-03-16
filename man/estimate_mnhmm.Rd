@@ -19,7 +19,7 @@ estimate_mnhmm(
   state_names = NULL,
   cluster_names = NULL,
   inits = "random",
-  init_sd = 2,
+  init_sd = NULL,
   restarts = 0L,
   method = "EM-DNM",
   bound = Inf,
@@ -76,16 +76,16 @@ is \code{NULL} (the default), numbered clusters are used.}
 
 \item{inits}{If \code{inits = "random"} (default), random initial values are
 used. Otherwise \code{inits} should be list of initial values. If coefficients
-are given using list components \code{eta_pi}, \code{eta_A}, \code{eta_B},
+are given using list elements \code{eta_pi}, \code{eta_A}, \code{eta_B},
 and \code{eta_omega}, these are used as is, alternatively initial values
 can be given in terms of the initial state, transition, emission, and mixture
-probabilities using list components \code{initial_probs}, \code{emission_probs},
+probabilities using list elements \code{initial_probs}, \code{emission_probs},
 \code{transition_probs}, and \code{cluster_probs}. These can also be mixed, i.e. you
 can give only \code{initial_probs} and \code{eta_A}.}
 
 \item{init_sd}{Standard deviation of the normal distribution used to generate
-random initial values. Default is \code{2}. If you want to fix the initial values
-of the regression coefficients to zero, use \code{init_sd = 0}.}
+random initial values. If initial values are given and \code{restart = 0}, then
+by default \code{init_sd} is set to zero. Otherwise the default is \code{2}.}
 
 \item{restarts}{Number of times to run optimization using random starting
 values (in addition to the final run). Default is 0.}
@@ -99,7 +99,8 @@ then switches to L-BFGS (but other algorithms of NLopt can be used).}
 \item{bound}{Positive value defining the hard lower and upper bounds for the
 working parameters \eqn{\eta}, which are used to avoid extreme probabilities and
 corresponding numerical issues especially in the M-step of EM algorithm.
-Default is \verb{Inf´, i.e., no bounds. Note that he bounds are not enforced  for M-step in intercept-only case with }lambda = 0`.}
+Default is \code{Inf}, i.e., no bounds. Note that the bounds are not enforced
+for M-step in intercept-only case with \code{lambda = 0}.}
 
 \item{control_restart}{Controls for restart steps, see details.}
 
@@ -135,7 +136,7 @@ set.seed(1)
 fit <- estimate_mnhmm(n_states = 3, n_clusters = 2,
   data = d, time = "time", id = "id", 
   cluster_formula = ~ male + catholic + gcse5eq + Grammar + 
-    funemp + fmpr + livboth + Belfast +
+    funemp + fmpr + livboth +
   N.Eastern + Southern + S.Eastern + Western,
   emission_formula = activity ~ male + catholic + gcse5eq,
   initial_formula = ~ 1, 

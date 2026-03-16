@@ -8,18 +8,29 @@
 \alias{get_initial_probs.mhmm}
 \title{Extract the Initial State Probabilities of Hidden Markov Model}
 \usage{
-get_initial_probs(model)
+get_initial_probs(model, ...)
 
-\method{get_initial_probs}{nhmm}(model)
+\method{get_initial_probs}{nhmm}(model, ids = NULL, ...)
 
-\method{get_initial_probs}{mnhmm}(model)
+\method{get_initial_probs}{mnhmm}(model, ids = NULL, ...)
 
-\method{get_initial_probs}{hmm}(model)
+\method{get_initial_probs}{hmm}(model, ...)
 
-\method{get_initial_probs}{mhmm}(model)
+\method{get_initial_probs}{mhmm}(model, ...)
 }
 \arguments{
 \item{model}{A hidden Markov model.}
+
+\item{...}{Ignored.}
+
+\item{ids}{Optional vector of sequence IDs. If \code{NULL} (the default),
+probabilities are computed for all sequences in the data, unless the
+probabilities are equal for all sequences, i.e., covariates do not depend on
+ID.}
+}
+\value{
+A \code{data.table} containing the initial state probabilities for each
+sequence defined by \code{ids}.
 }
 \description{
 Extract the Initial State Probabilities of Hidden Markov Model
